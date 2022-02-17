@@ -1,0 +1,10 @@
+---
+layout: ecosystem_detail
+title: chemicalx
+summary: A PyTorch and TorchDrug based deep learning library for drug pair scoring.
+link: https://github.com/AstraZeneca/chemicalx
+summary-home: A PyTorch and TorchDrug based deep learning library for drug pair scoring.
+featured-home: false
+github-id: AstraZeneca/chemicalx
+date-added: 02/17/22
+---
