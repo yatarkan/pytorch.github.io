@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" type="image/x-icon" href="pytorch.github.io//favicon.ico?">
+  <title>
+    
+      Understanding GPU Memory 2: Finding and Removing Reference Cycles | PyTorch
+    
+  </title>
+  <meta name="robots" content="index, follow" />
+
+<meta name="description" content="This is part 2 of the Understanding GPU Memory blog series. Our first post Understanding GPU Memory 1: Visualizing All Allocations over Time shows how to use the  memory snapshot tool. In this part, we will use the Memory Snapshot to visualize a GPU memory leak caused by reference cycles, and then locate and remove them in our code using the Reference Cycle Detector.
+
+" />
+
+  <meta property="og:image" content="https://pytorch.orgpytorch.github.io//assets/images/social-share.jpg" />
+  <meta name="twitter:image" content="https://pytorch.orgpytorch.github.io//assets/images/social-share.jpg" />
+
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Understanding GPU Memory 2: Finding and Removing Reference Cycles" />
+<meta property="og:description" content="This is part 2 of the Understanding GPU Memory blog series. Our first post Understanding GPU Memory 1: Visualizing All Allocations over Time shows how to use the  memory snapshot tool. In this part, we will use the Memory Snapshot to visualize a GPU memory leak caused by reference cycles, and then locate and remove them in our code using the Reference Cycle Detector.
+
+" />
+<meta property="og:site_name" content="PyTorch" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Understanding GPU Memory 2: Finding and Removing Reference Cycles" />
+<meta name="twitter:description" content="This is part 2 of the Understanding GPU Memory blog series. Our first post Understanding GPU Memory 1: Visualizing All Allocations over Time shows how to use the  memory snapshot tool. In this part, we will use the Memory Snapshot to visualize a GPU memory leak caused by reference cycles, and then locate and remove them in our code using the Reference Cycle Detector.
+
+" />
+
+  <link rel="stylesheet" href="pytorch.github.io//assets/main.css">
+  <script src="pytorch.github.io//assets/vendor/jquery.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/popper.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/bootstrap.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/anchor.min.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+  
+    <script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=UA-117752657-2"
+></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "UA-117752657-2");
+</script>
+
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '243028289693773');
+    fbq('track', 'PageView');
+</script>
+
+<noscript>
+  <img height="1" width="1"
+  src="https://www.facebook.com/tr?id=243028289693773&ev=PageView
+  &noscript=1"/>
+</noscript>
+
+    <!-- Twitter universal website tag code -->
+<img height="1" width="1" style="display:none;" alt="" src="https://analytics.twitter.com/i/adsct?p_id=Twitter&p_user_id=0&txn_id=o2gi1&events=%5B%5B%22pageview%22%2Cnull%5D%5D&tw_sale_amount=0&tw_order_quantity=0 (https://urldefense.proofpoint.com/v2/url?u=https-3A__analytics.twitter.com_i_adsct-3Fp-5Fid-3DTwitter-26p-5Fuser-5Fid-3D0-26txn-5Fid-3Do2gi1-26events-3D-255B-255B-2522pageview-2522-252Cnull-255D-255D-26tw-5Fsale-5Famount-3D0-26tw-5Forder-5Fquantity-3D0&d=DwMGaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=GMr8XYCDyeQQZuD3noL91A&m=dAJyokk16UvYy-vMrGn_JwYiGfp_eEgo25B9iGDCG-A&s=o6i4D0V0088WH2RnzIoqiF-vj45PL-2sTrsxQ0SNO3A&e=)" />
+<img height="1" width="1" style="display:none;" alt="" src="//t.co/i/adsct?p_id=Twitter&p_user_id=0&txn_id=o2gi1&events=%5B%5B%22pageview%22%2Cnull%5D%5D&tw_sale_amount=0&tw_order_quantity=0 (https://urldefense.proofpoint.com/v2/url?u=https-3A__linkprotect.cudasvc.com_url-3Fa-3Dhttp-253a-252f-252ft.co-252fi-252fadsct-253fp-5Fid-253dTwitter-2526p-5Fuser-5Fid-253d0-2526txn-5Fid-253do2gi1-2526events-253d-25255B-25255B-252522pageview-252522-25252Cnull-25255D-25255D-2526tw-5Fsale-5Famount-253d0-2526tw-5Forder-5Fquantity-253d0-26c-3DE-2C1-2CC33dLwIhtuEcl5FhdztSnUwsioeej5k-2DWy0RYREBAq51kGji32A2Cw94YU9vQBpY5tPN3AukEw3C-5F-2DlbtndnLoR7-5FA-5FLoH0Rr7zLtP1ykptN-26typo-3D1&d=DwMGaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=GMr8XYCDyeQQZuD3noL91A&m=dAJyokk16UvYy-vMrGn_JwYiGfp_eEgo25B9iGDCG-A&s=Abgc3XBkhESv8XBYtLchdDZyISGsK6v_BB6cLMJGyCw&e=)" />
+<!-- End Twitter universal website tag code -->
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <link href="pytorch.github.io//feed.xml" type="application/atom+xml" rel="alternate" title="Pythorch Blog Posts" />
+</head>
+
+
+<body class="blog">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <div class="main-background blog-background blog-detail-background"></div>
+    <div class="hello-bar">
+        <div class="container">
+          Join us in Silicon Valley September 18-19 at the 2024 PyTorch Conference. <a target="_blank" href="https://events.linuxfoundation.org/pytorch-conference/">Learn more</a>.
+        </div>
+      </div>
+      
+    <div class="container-fluid header-holder blog-detail-header">
+        <div class="container">
+            
+
+<div class="header-container">
+  <a class="header-logo" href="https://pytorch.orgpytorch.github.io/" aria-label="PyTorch"></a>
+
+  <div class="main-menu">
+  <ul>
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Learn
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//get-started">
+            <span class=dropdown-title>Get Started</span>
+            <p>Run PyTorch locally or get started quickly with one of the supported cloud platforms</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/">
+            <span class="dropdown-title">Tutorials</span>
+            <p>Whats new in PyTorch tutorials</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/beginner/basics/intro.html">
+            <span class="dropdown-title">Learn the Basics</span>
+            <p>Familiarize yourself with PyTorch concepts and modules</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/recipes/recipes_index.html">
+            <span class="dropdown-title">PyTorch Recipes</span>
+            <p>Bite-size, ready-to-deploy PyTorch code examples</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/beginner/introyt.html">
+            <span class="dropdown-title">Intro to PyTorch - YouTube Series</span>
+            <p>Master PyTorch basics with our engaging YouTube tutorial series</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Ecosystem 
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//ecosystem">
+            <span class="dropdown-title">Tools</span>
+            <p>Learn about the tools and frameworks in the PyTorch Ecosystem</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//#community-module">
+            <span class=dropdown-title>Community</span>
+            <p>Join the PyTorch developer community to contribute, learn, and get your questions answered.</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://discuss.pytorch.org" target="_blank">
+            <span class=dropdown-title>Forums</span>
+            <p>A place to discuss PyTorch code, issues, install, research</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//resources">
+            <span class=dropdown-title>Developer Resources</span>
+            <p>Find resources and get questions answered</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//ecosystem/contributor-awards-2023">
+            <span class="dropdown-title">Contributor Awards - 2023</span>
+            <p>Award winners announced at this year's PyTorch Conference</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Edge 
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//edge">
+            <span class="dropdown-title">About PyTorch Edge</span>
+            <p>Build innovative and privacy-aware AI experiences for edge devices</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//executorch-overview">
+            <span class="dropdown-title">ExecuTorch</span>
+            <p>End-to-end solution for enabling on-device inference capabilities across mobile and edge devices</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="docsDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Docs
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="https://pytorch.org/docs">
+            <span class="dropdown-title">PyTorch</span>
+            <p>Explore the documentation for comprehensive guidance on how to use PyTorch.</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//pytorch-domains">
+            <span class="dropdown-title">PyTorch Domains</span>
+            <p> Read the PyTorch Domains documentation to learn more about domain-specific libraries.</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Blog & News
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//blog">
+            <span class="dropdown-title">PyTorch Blog</span>
+            <p>Catch up on the latest technical news and happenings</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//community-blog">
+            <span class="dropdown-title">Community Blog</span>
+            <p>Stories from the PyTorch ecosystem</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//videos">
+            <span class="dropdown-title">Videos</span>
+            <p>Learn about the latest PyTorch tutorials, new, and more </p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//community-stories">
+            <span class="dropdown-title">Community Stories</span>
+            <p>Learn how our community solves real, everyday machine learning problems with PyTorch</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//events">
+            <span class=dropdown-title>Events</span>
+            <p>Find events, webinars, and podcasts</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          About
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//foundation">
+            <span class=dropdown-title>PyTorch Foundation</span>
+            <p>Learn more about the PyTorch Foundation.</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//governing-board">
+            <span class=dropdown-title>Governing Board</span>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <a href="pytorch.github.io//join" data-cta="join">
+        Become a Member
+      </a>
+    </li>
+
+    <li class="main-menu-item" id="github-main-menu-link">
+      <a href="https://github.com/pytorch/pytorch" title="Go to PyTorch GitHub">
+        <div id="topnav-gh-icon"></div>
+      </a>
+    </li>
+
+    <li class="navSearchWrapper reactNavSearchWrapper" key="search">
+      <div class="search-border">
+        <div id="search-icon"></div>
+        <input
+          id="search-input"
+          type="text"
+          title="Search"
+        />
+        <div id="close-search">X</div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<script src="pytorch.github.io//assets/main-menu-dropdown.js"></script>
+
+
+  <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+</div>
+
+        </div>
+    </div>
+
+    <div class="jumbotron jumbotron-fluid blog-detail-jumbotron">
+        <div class="container blog-detail-container">
+            <p class="featured-post">December 19, 2023</p>
+            <h1>
+                <a class="blog-title">Understanding GPU Memory 2: Finding and Removing Reference Cycles</a>
+            </h1>
+        </div>
+    </div>
+
+    <div class="main-content-wrapper blog-detail-wrapper">
+        <div class="main-content blog-detail-content">
+            <div class="container">
+                <img src="pytorch.github.io//assets/images/logo-icon.svg" class="img-fluid author-icon">
+                <article class="pytorch-article">
+                    <p class="author">
+                      by
+                      
+                        Aaron Shi, Zachary DeVito
+                      
+                    </p>
+                    <p>This is part 2 of the Understanding GPU Memory blog series. Our first post <a href="/blog/understanding-gpu-memory-1/">Understanding GPU Memory 1: Visualizing All Allocations over Time</a> shows how to use the  memory snapshot tool. In this part, we will use the Memory Snapshot to visualize a GPU memory leak caused by reference cycles, and then locate and remove them in our code using the Reference Cycle Detector.</p>
+
+<p>Sometimes when we were using the Memory Snapshot, we saw plots of GPU memory that looked similar to this.</p>
+
+<p><img src="/assets/images/understanding-gpu-memory-1/memory_leak_oom.jpg" alt="GPU memory" style="width:100%;" /></p>
+
+<p>In this snapshot, each peak shows GPU tensors building up over time and then several tensors getting released at once. In addition, a CUDA OOM happens on the right side causing all the tensors to be released. Seeing the tensors accumulate like this is a <strong>clear indication of a problem, but it doesn’t immediately suggest why</strong>.</p>
+
+<h2 id="tensors-in-reference-cycles">Tensors in Reference Cycles</h2>
+
+<p>During early debugging, we dug in further to find that this **pattern happens a lot when your Python code has objects with reference cycles. ** Python will clean up non-cyclic objects immediately using reference counting. However objects in reference cycles are only cleaned up later by a cycle collector. If these cycles refer to a GPU tensor, the GPU tensor will stay alive until that cycle collector runs and removes the reference cycle. Let’s take a look at a simplified example.</p>
+
+<p><img src="/assets/images/understanding-gpu-memory-1/simple_reference_cycle.png" alt="Simple reference cycle" style="width:100%; max-width:400px; margin-right: auto; margin-left: auto; display: block;" /></p>
+
+<p><strong>Code Snippet behind the snapshot (full code in Appendix A):</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    def leak(tensor_size, num_iter=100000, device="cuda:0"):
+      class Node:
+        def __init__(self, T):
+          self.tensor = T
+          self.link = None
+
+      for _ in range(num_iter):
+        A = torch.zeros(tensor_size, device=device)
+        B = torch.zeros(tensor_size, device=device)
+        a, b = Node(A), Node(B)
+
+        # A reference cycle will force refcounts to be non-zero.
+        a.link, b.link = b, a
+        # Python will eventually garbage collect a &amp; b, but will
+        # OOM on the GPU before that happens (since python
+        # runtime doesn't know about CUDA memory usage).
+</code></pre></div></div>
+
+<p>In this code example, the tensors A and B are created, where A has a link to B and vice versa. This forces a non-zero reference count when A and B go out of scope. When we run this for 100,000 iterations, we expect the automatic garbage collection to free the reference cycles when going out of scope. However, this will actually CUDA OOM.</p>
+
+<h3 id="why-doesnt-automatic-garbage-collection-work">Why doesn’t automatic garbage collection work?</h3>
+
+<p>The automatic garbage collection works well when there is a lot of extra memory as is common on CPUs because it amortizes the expensive garbage collection by using <a href="https://en.wikipedia.org/wiki/Tracing_garbage_collection#Generational_GC_(ephemeral_GC)">Generational Garbage Collection</a>. But to amortize the collection work, it defers some memory cleanup making the maximum memory usage higher, which is less suited to memory constrained environments. The Python runtime also has no insights into CUDA memory usage, so it cannot be triggered on high memory pressure either. It’s even more challenging as GPU training is almost always memory constrained because we will often raise the batch size to use any additional free memory.</p>
+
+<p>The CPython’s garbage collection frees unreachable objects held in reference cycles via the <strong>mark-and-sweep</strong>. The garbage collection is automatically run when the number of objects exceeds certain thresholds. There are <strong>3 generations of thresholds</strong> to help amortize the expensive costs of running garbage collection on every object. The later generations are less frequently run. This would explain why automatic collections will only clear several tensors on each peak, however there are still tensors that leak resulting in the CUDA OOM. Those tensors were held by reference cycles in later generations.</p>
+
+<h2 id="explicitly-calling-gccollect">Explicitly calling gc.collect()</h2>
+
+<p>One way to fix this is by explicitly calling the garbage collector frequently. Here we can see that the GPU memory for tensors out of scope gets cleaned up when we explicitly call the garbage collector every 100 iterations. This also controls the maximum GPU peak memory held by leaking tensors.</p>
+
+<p><img src="/assets/images/understanding-gpu-memory-1/memory_leak_gc_collect.jpg" alt="memory leak" style="width:100%;" /></p>
+
+<p>Although this works and fixes the CUDA OOM issue, calling gc.collect() too frequently can cause other issues including <strong>QPS regressions</strong>. Therefore we cannot simply increase the frequency of garbage collection on every training job. <strong>It’s best to just avoid creating reference cycles in the first place</strong>. More on this in section, Reference Cycle Detector.</p>
+
+<h2 id="sneaky-memory-leak-in-callback">Sneaky Memory Leak in Callback</h2>
+
+<p>Real examples are more complicated, so let’s look at a more realistic example that has a similar behavior. In this snapshot, we can observe the same behavior of tensors being accumulated and freed during automatic garbage collection, until we hit a CUDA OOM.</p>
+
+<p><img src="/assets/images/understanding-gpu-memory-1/memory_leak_awaitable.jpg" alt="memory leak" style="width:100%;" /></p>
+
+<p><strong>Code Snippet behind this snapshot (full code sample in Appendix A):</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    class AwaitableTensor:
+      def __init__(self, tensor_size):
+        self._tensor_size = tensor_size
+        self._tensor = None
+
+      def wait(self):
+        self._tensor = torch.zeros(self._tensor_size, device="cuda:0")
+        return self._tensor
+
+    class AwaitableTensorWithViewCallback:
+      def __init__(self, tensor_awaitable, view_dim):
+        self._tensor_awaitable = tensor_awaitable
+        self._view_dim = view_dim
+        # Add a view filter callback to the tensor.
+        self._callback = lambda ret: ret.view(-1, self._view_dim)
+
+      def wait(self):
+        return self._callback(self._tensor_awaitable.wait())
+
+    async def awaitable_leak(
+      tensor_size=2**27, num_iter=100000,
+    ):
+      for _ in range(num_iter):
+        A = AwaitableTensor(tensor_size)
+        AwaitableTensorWithViewCallBack(A, 4).wait()
+</code></pre></div></div>
+
+<p>In this code, we define two classes. The class AwaitableTensor will create a tensor when waited upon. Another class AwaitableTensorWithViewCallback will apply a view filter on the AwaitableTensor via callback lambda.</p>
+
+<p>When running awaitable_leak, which creates tensor A (512 MB) and applies a view filter for 100,000 iterations, we expect that A should be reclaimed each time it goes out of scope because the reference count should reach 0. However, this will actually OOM!</p>
+
+<p>While we know there is a reference cycle here, it isn’t clear from the code where the cycle is created. <strong>To help with these situations, we have created a tool to locate and report these cycles.</strong></p>
+
+<h2 id="reference-cycle-detector">Reference Cycle Detector</h2>
+
+<p>Introducing the <strong>Reference Cycle Detector</strong>, which helps us find reference cycles keeping GPU tensors alive. The API is fairly simple:</p>
+
+<ul>
+  <li>During model initialization:
+    <ul>
+      <li><strong>Import:</strong> <code class="language-plaintext highlighter-rouge">from torch.utils.viz._cycles import warn_tensor_cycles</code></li>
+      <li><strong>Start:</strong> <code class="language-plaintext highlighter-rouge">warn_tensor_cycles()</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>The Reference Cycle Detector will issue warnings every time that the cycle collector runs and finds a CUDA tensor that gets freed. The warning provides an <strong>object graph</strong> showing how the reference cycle refers to the GPU tensor.</p>
+
+<p><img src="/assets/images/understanding-gpu-memory-1/awaitable_leak_cycle.png" alt="object graph" style="width:100%;" /></p>
+
+<p>For instance in this object graph, we can easily observe that there is a <strong>circular dependency on the outer circle of the graph</strong>, and <strong>highlighted in red is the GPU tensor kept alive</strong>.</p>
+
+<p>Most cycles are pretty easy to fix once they are discovered. For instance here we can remove the reference to self created by self._view_dim in the callback.</p>
+
+<p><img src="/assets/images/understanding-gpu-memory-1/awaitable_code_snippet.png" alt="code snippet" style="width:100%;" /></p>
+
+<p>We’ve spent some time fixing cycles in existing models using these tools. For example in TorchRec, we’ve found and removed a reference cycle in <a href="https://github.com/pytorch/torchrec/pull/1226">PR#1226</a>.</p>
+
+<p><img src="/assets/images/understanding-gpu-memory-1/torchrec_code_snippet.png" alt="code snippet" style="width:100%;" /></p>
+
+<p>Once we’ve removed the reference cycles, the code will <strong>no longer issue a CUDA OOM nor show any memory leaks</strong> in their snapshots.</p>
+
+<h3 id="what-are-the-other-benefits-of-using-the-reference-cycle-detector">What are the other benefits of using the Reference Cycle Detector?</h3>
+
+<p>Removing these cycles will also directly <strong>lower the maximum GPU memory usage</strong> as well as make it <strong>less likely for memory to fragment</strong> because the allocator returns to the same state after each iteration.</p>
+
+<h2 id="where-can-i-find-these-tools">Where can I find these tools?</h2>
+
+<p>We hope that the Reference Cycle Detector will greatly improve your ability to find and remove memory leaks caused by reference cycles. The Reference Cycle Detector is available in the v2.1 release of PyTorch as experimental features and More information about the Reference Cycle Detector can be found in the <a href="https://pytorch.org/docs/main/torch_cuda_memory.html">PyTorch Memory docs here</a>.</p>
+
+<h2 id="feedback">Feedback</h2>
+
+<p>We look forward to hearing from you about any enhancements, bugs or memory stories that our tools helped to solve! As always, please feel free to open new issues on PyTorch’s Github page.</p>
+
+<p>We are also open to contributions from the OSS community, feel free to tag <a href="https://github.com/aaronenyeshi">Aaron Shi</a> and <a href="https://github.com/zdevito">Zachary DeVito</a> in any Github PRs for reviews.</p>
+
+<h2 id="acknowledgements">Acknowledgements</h2>
+
+<p>Really appreciate the content reviewers, <a href="mailto:marksaroufim@meta.com">Mark Saroufim</a>, <a href="mailto:gchanan@meta.com">Gregory Chanan</a>, and <a href="mailto:adnanaziz@meta.com">Adnan Aziz</a> for reviewing this post and improving its readability.</p>
+
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="appendix-a---code-sample">Appendix A - Code Sample</h3>
+
+<p>This code snippet was used to generate the plots and examples shown. Here are the arguments to reproduce the sections:</p>
+
+<ul>
+  <li>Introduction: <code class="language-plaintext highlighter-rouge">python sample.py</code></li>
+  <li>Explicitly calling gc.collect(): <code class="language-plaintext highlighter-rouge">python sample.py --gc_collect_interval=100</code></li>
+  <li>Sneaky Memory Leak in Callback: <code class="language-plaintext highlighter-rouge">python sample.py --workload=awaitable</code></li>
+  <li>Ref Cycle Detector: <code class="language-plaintext highlighter-rouge">python sample.py --workload=awaitable --warn_tensor_cycles</code></li>
+</ul>
+
+<p><strong>sample.py:</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># (c) Meta Platforms, Inc. and affiliates. 
+import argparse
+import asyncio
+import gc
+import logging
+import socket
+from datetime import datetime, timedelta
+
+import torch
+
+logging.basicConfig(
+   format="%(levelname)s:%(asctime)s %(message)s",
+   level=logging.INFO,
+   datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger: logging.Logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
+
+TIME_FORMAT_STR: str = "%b_%d_%H_%M_%S"
+
+# Keep a max of 100,000 alloc/free events in the recorded history
+# leading up to the snapshot.
+MAX_NUM_OF_MEM_EVENTS_PER_SNAPSHOT: int = 100000
+
+def start_record_memory_history() -&gt; None:
+   if not torch.cuda.is_available():
+       logger.info("CUDA unavailable. Not recording memory history")
+       return
+
+   logger.info("Starting snapshot record_memory_history")
+   torch.cuda.memory._record_memory_history(
+       max_entries=MAX_NUM_OF_MEM_EVENTS_PER_SNAPSHOT
+   )
+
+def stop_record_memory_history() -&gt; None:
+   if not torch.cuda.is_available():
+       logger.info("CUDA unavailable. Not recording memory history")
+       return
+
+   logger.info("Stopping snapshot record_memory_history")
+   torch.cuda.memory._record_memory_history(enabled=None)
+
+def export_memory_snapshot() -&gt; None:
+   if not torch.cuda.is_available():
+       logger.info("CUDA unavailable. Not exporting memory snapshot")
+       return
+
+   # Prefix for file names.
+   host_name = socket.gethostname()
+   timestamp = datetime.now().strftime(TIME_FORMAT_STR)
+   file_prefix = f"{host_name}_{timestamp}"
+
+   try:
+       logger.info(f"Saving snapshot to local file: {file_prefix}.pickle")
+       torch.cuda.memory._dump_snapshot(f"{file_prefix}.pickle")
+   except Exception as e:
+       logger.error(f"Failed to capture memory snapshot {e}")
+       return
+
+# This function will leak tensors due to the reference cycles.
+def simple_leak(tensor_size, gc_interval=None, num_iter=30000, device="cuda:0"):
+    class Node:
+        def __init__(self, T):
+            self.tensor = T
+            self.link = None
+
+    for i in range(num_iter):
+        A = torch.zeros(tensor_size, device=device)
+        B = torch.zeros(tensor_size, device=device)
+        a, b = Node(A), Node(B)
+        # A reference cycle will force refcounts to be non-zero, when
+        # a and b go out of scope.
+        a.link, b.link = b, a
+        # Python will eventually gc a and b, but may OOM on the CUDA
+        # device before that happens (since python runtime doesn't
+        # know about CUDA memory usage).
+
+        # Since implicit gc is not called frequently enough due to
+        # generational gc, adding an explicit gc is necessary as Python
+        # runtime does not know about CUDA memory pressure.
+        # https://en.wikipedia.org/wiki/Tracing_garbage_collection#Generational_GC_(ephemeral_GC)
+        if gc_interval and i % int(gc_interval) == 0:
+            gc.collect()
+
+async def awaitable_leak(
+    tensor_size, gc_interval=None, num_iter=100000, device="cuda:0"
+):
+    class AwaitableTensor:
+        def __init__(self, tensor_size, device) -&gt; None:
+            self._tensor_size = tensor_size
+            self._device = device
+            self._tensor = None
+
+        def wait(self) -&gt; torch.Tensor:
+            self._tensor = torch.zeros(self._tensor_size, device=self._device)
+            return self._tensor
+
+    class AwaitableTensorWithViewCallBack:
+        def __init__(
+            self,
+            tensor_awaitable: AwaitableTensor,
+            view_dim: int,
+        ) -&gt; None:
+            self._tensor_awaitable = tensor_awaitable
+            self._view_dim = view_dim
+            # Add a view filter callback to the tensor.
+            self._callback = lambda ret: ret.view(-1, self._view_dim)
+
+        def wait(self) -&gt; torch.Tensor:
+            return self._callback(self._tensor_awaitable.wait())
+
+    for i in range(num_iter):
+        # Create an awaitable tensor
+        a_tensor = AwaitableTensor(tensor_size, device)
+
+        # Apply a view filter callback on the awaitable tensor.
+        AwaitableTensorWithViewCallBack(a_tensor, 4).wait()
+
+        # a_tensor will go out of scope.
+
+        if gc_interval and i % int(gc_interval) == 0:
+            gc.collect()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="A memory_leak binary instance")
+    parser.add_argument(
+        "--gc_collect_interval",
+        default=None,
+        help="Explicitly call GC every given interval. Default is off.",
+    )
+    parser.add_argument(
+        "--workload",
+        default="simple",
+        help="Toggle which memory leak workload to run. Options are simple, awaitable.",
+    )
+    parser.add_argument(
+        "--warn_tensor_cycles",
+        action="store_true",
+        default=False,
+        help="Toggle whether to enable reference cycle detector.",
+    )
+    args = parser.parse_args()
+
+    if args.warn_tensor_cycles:
+        from tempfile import NamedTemporaryFile
+
+        from torch.utils.viz._cycles import observe_tensor_cycles
+
+        logger.info("Enabling warning for Python reference cycles for CUDA Tensors.")
+
+        def write_and_log(html):
+            with NamedTemporaryFile("w", suffix=".html", delete=False) as f:
+                f.write(html)
+                logger.warning(
+                    "Reference cycle includes a CUDA Tensor see visualization of cycle %s",
+                    f.name,
+                )
+
+        observe_tensor_cycles(write_and_log)
+    else:
+        # Start recording memory snapshot history
+        start_record_memory_history()
+
+    # Run the workload with a larger tensor size.
+    # For smaller sizes, we will not CUDA OOM as gc will kick in often enough
+    # to reclaim reference cycles before an OOM occurs.
+    size = 2**26  # 256 MB
+    try:
+        if args.workload == "awaitable":
+            size *= 2
+            logger.info(f"Running tensor_size: {size*4/1024/1024} MB")
+            asyncio.run(
+                awaitable_leak(tensor_size=size, gc_interval=args.gc_collect_interval)
+            )
+        elif args.workload == "simple":
+            logger.info(f"Running tensor_size: {size*4/1024/1024} MB")
+            simple_leak(tensor_size=size, gc_interval=args.gc_collect_interval)
+        else:
+            raise Exception("Unknown workload.")
+    except Exception:
+        logger.exception(f"Failed to allocate {size*4/1024/1024} MB")
+
+    # Create the memory snapshot file
+    export_memory_snapshot()
+
+    # Stop recording memory snapshot history
+    stop_record_memory_history()
+</code></pre></div></div>
+
+                </article>
+            </div>
+        </div>
+    </div>
+
+<!--    
+
+
+ -->
+    <div class="container-fluid docs-tutorials-resources">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <h2>Docs</h2>
+        <p>Access comprehensive developer documentation for PyTorch</p>
+        <a class="with-right-arrow" href="pytorch.github.io//docs">View Docs</a>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <h2>Tutorials</h2>
+        <p>Get in-depth tutorials for beginners and advanced developers</p>
+        <a class="with-right-arrow" href="https://pytorch.org/tutorials">View Tutorials</a>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <h2>Resources</h2>
+        <p>Find development resources and get your questions answered</p>
+        <a class="with-right-arrow" href="pytorch.github.io//resources">View Resources</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-container">
+    <div class="lf-grid">
+      <div class="footer-logo-wrapper">
+        <a href="https://pytorch.orgpytorch.github.io/" class="footer-logo">
+          <img src="/assets/images/logo-icon.svg" alt="PyTorch logo" width="40">
+        </a>
+      </div>
+
+      <ul class="social-links">
+        <li><a href="https://www.facebook.com/pytorch" target="_blank" title="PyTorch on Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="-0.51 -0.26 26.45 26.45" aria-label="Facebook"><path fill="currentColor" d="M25.497 13.075c0-2.45-.698-4.848-2.011-6.911a12.765 12.765 0 0 0-5.398-4.73A12.671 12.671 0 0 0 11.008.38a12.705 12.705 0 0 0-6.529 2.95A12.827 12.827 0 0 0 .563 9.358a12.896 12.896 0 0 0-.07 7.201 12.831 12.831 0 0 0 3.801 6.103 12.709 12.709 0 0 0 6.471 3.078v-8.957H7.53v-3.708h3.235v-2.824c0-3.213 1.903-4.988 4.813-4.988.956.014 1.909.097 2.852.25V8.67h-1.607a1.83 1.83 0 0 0-1.518.497 1.854 1.854 0 0 0-.561 1.505v2.404h3.535l-.563 3.708h-2.97v8.957a12.725 12.725 0 0 0 7.697-4.337 12.87 12.87 0 0 0 3.054-8.328z"/></svg>	
+        </a></li>
+        <li><a href="https://twitter.com/pytorch" target="_blank" title="PyTorch on X">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 300 300" aria-label="X"><path fill="currentColor" d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59h89.34M36.01 19.54H76.66l187.13 262.13h-40.66"/></svg>
+        </a></li>
+        <li><a href="https://www.youtube.com/pytorch" target="_blank" title="PyTorch on YouTube">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="0.21 0.27 34.45 25.07" aria-label="YouTube"><path fill="currentColor" d="M33.729 6.084s-.327-2.33-1.317-3.356a4.691 4.691 0 0 0-3.32-1.432c-4.634-.34-11.589-.34-11.589-.34h-.014s-6.954 0-11.59.342a4.692 4.692 0 0 0-3.32 1.432c-.993 1.025-1.315 3.354-1.315 3.354a52.189 52.189 0 0 0-.331 5.473v2.566c.014 1.829.125 3.656.331 5.472 0 0 .322 2.33 1.316 3.36 1.26 1.345 2.916 1.3 3.653 1.445 2.65.26 11.263.34 11.263.34s6.96-.01 11.597-.353a4.691 4.691 0 0 0 3.32-1.432c.993-1.026 1.316-3.356 1.316-3.356.206-1.817.316-3.644.33-5.473v-2.57a52.26 52.26 0 0 0-.33-5.472zM14.076 17.232V7.729l8.951 4.768-8.95 4.735z"/></svg>	
+        </a></li>
+        <li><a href="https://www.linkedin.com/company/pytorch" target="_blank" title="PyTorch on LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="-10.23 -10.23 531.96 531.96" aria-label="LinkedIn"><rect width="512" height="512" rx="0" fill="currentColor"/><circle fill="#000" cx="142" cy="138" r="37"/><path stroke="#000" stroke-width="66" d="M244 194v198M142 194v198"/><path fill="#000" d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+        </a></li>
+        <li><a href="https://social.lfx.dev/@pytorch" rel="me" target="_blank" title="PyTorch on Mastodon">
+          <svg fill="currentColor" aria-label="Mastodon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"><path d="M21.327 8.566c0-4.339-2.843-5.61-2.843-5.61-1.433-.658-3.894-.935-6.451-.956h-.063c-2.557.021-5.016.298-6.45.956 0 0-2.843 1.272-2.843 5.61 0 .993-.019 2.181.012 3.441.103 4.243.778 8.425 4.701 9.463 1.809.479 3.362.579 4.612.51 2.268-.126 3.541-.809 3.541-.809l-.075-1.646s-1.621.511-3.441.449c-1.804-.062-3.707-.194-3.999-2.409a4.523 4.523 0 0 1-.04-.621s1.77.433 4.014.536c1.372.063 2.658-.08 3.965-.236 2.506-.299 4.688-1.843 4.962-3.254.434-2.223.398-5.424.398-5.424zm-3.353 5.59h-2.081V9.057c0-1.075-.452-1.62-1.357-1.62-1 0-1.501.647-1.501 1.927v2.791h-2.069V9.364c0-1.28-.501-1.927-1.502-1.927-.905 0-1.357.546-1.357 1.62v5.099H6.026V8.903c0-1.074.273-1.927.823-2.558.566-.631 1.307-.955 2.228-.955 1.065 0 1.872.409 2.405 1.228l.518.869.519-.869c.533-.819 1.34-1.228 2.405-1.228.92 0 1.662.324 2.228.955.549.631.822 1.484.822 2.558v5.253z"/></svg>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="privacy-policy">
+      <div class="copyright">
+        <p>© Copyright The Linux Foundation. The PyTorch Foundation is a project of The Linux Foundation. 
+          For web site terms of use, trademark policy and other policies applicable to The PyTorch Foundation please see 
+          <a href="https://www.linuxfoundation.org/legal/policies/">Linux Foundation Policies</a>. The PyTorch Foundation supports the PyTorch open source 
+          project, which has been established as PyTorch Project a Series of LF Projects, LLC. For policies applicable to the PyTorch Project a Series of LF Projects, LLC, 
+          please see <a href="https://www.lfprojects.org/policies/">LF Projects, LLC Policies</a>. <a href="https://www.linuxfoundation.org/privacy">Privacy Policy</a> and <a href="https://www.linuxfoundation.org/terms">Terms of Use</a>.</p>
+      </div>
+    </div>
+  </div>
+  <img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0"/>
+
+</footer>
+
+<div class="mobile-main-menu">
+  <div class="container-fluid">
+    <div class="container">
+      <div class="mobile-main-menu-header-container">
+        <a class="header-logo" href="https://pytorch.orgpytorch.github.io/" aria-label="PyTorch"></a>
+        <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-main-menu-links-container">
+
+    <div class="main-menu">
+      <ul>
+        <li class="navSearchWrapper reactNavSearchWrapper tabletSearchWrapper" key="search">
+          <div class="mobile-search-border">
+            <input
+              id="mobile-search-input"
+              type="text"
+              title="Search"
+            />
+            <div id="mobile-search-icon"></div>
+          </div>
+        </li>
+
+        <li class="resources-mobile-menu-title">
+          <a>Learn</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//get-started">Get Started</a> 
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials">Tutorials</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/beginner/basics/intro.html">Learn the Basics</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/recipes/recipes_index.html">PyTorch Recipes</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/beginner/introyt.html">Introduction to PyTorch - YouTube Series</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Ecosystem</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//ecosystem">Tools</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//#community-module">Community</a>
+          </li>
+          <li>
+            <a href="https://discuss.pytorch.org">Forums</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//resources">Developer Resources</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//ecosystem/contributor-awards-2023">Contributor Awards - 2023</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Edge</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//edge">About PyTorch Edge</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//executorch-overview">ExecuTorch</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Docs</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="https://pytorch.org/docs">PyTorch</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//pytorch-domains">PyTorch Domains</a>
+          </li>
+        </ul>
+
+        <li class="resources-mobile-menu-title">
+          <a>Blog & News</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//blog">PyTorch Blog</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//community-blog">Community Blog</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//videos">Videos</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//community-stories">Community Stories</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//events">Events</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>About</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//foundation">PyTorch Foundation</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//governing-board">Governing Board</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a href="pytorch.github.io//join">Become a Member</a>
+        </li>
+        <li class="resources-mobile-menu-title">
+          <a href="https://github.com/pytorch/pytorch" title="Go to PyTorch GitHub"><div id="topnav-gh-icon"></div></a>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<script src="pytorch.github.io//assets/mobile-menu.js"></script>
+<script src="pytorch.github.io//assets/scroll-to-anchor.js"></script>
+<script src="pytorch.github.io//assets/external-links-new-tab.js"></script>
+
+  <script src="pytorch.github.io//assets/search-bar.js"></script>
+
+<script src="pytorch.github.io//assets/cookie-banner.js"></script>
+
+<script type="text/javascript">
+  mobileMenu.bind();
+  anchors.add('.pytorch-article h2, .pytorch-article h3, .pytorch-article h4, .pytorch-article h5');
+
+  // Add class to links that have code blocks, since we cannot create links in code blocks
+  $("a code.highlighter-rouge").each(function(e) {
+    $(this).closest("a").addClass("has-code");
+  });
+
+  scrollToAnchor.bind();
+
+  var hasStaticHeader = $(".blog-header, .blog-detail-header, .resources-header, .get-started-header, .features-header, .ecosystem-header, .hub-header, .mobile-header, .announcement-header, .comm-stories-header").length > 0;
+
+  if (!hasStaticHeader) {
+    $(window).on("scroll", function() {
+      var top = $(this).scrollTop();
+      var fullPosition = $(".main-background").height() - $(".header-holder").height();
+
+      if (top <= 40) {
+        $(".header-holder").css({"backgroundColor": "rgba(0, 0, 0, 0.165)"});
+      } else if (top >= fullPosition) {
+        $(".header-holder").css({"backgroundColor": "#000000"});
+      } else {
+        var bgColor = "rgba(0, 0, 0, " + top / fullPosition + ")";
+        $(".header-holder").css({"backgroundColor": bgColor});
+      }
+    });
+  }
+</script>
+
+
+  <script src="pytorch.github.io//assets/track-events.js"></script>
+  <script>trackEvents.bind();</script>
+
+
+
+<div class="cookie-banner-wrapper">
+  <div class="container">
+    <p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
+    <img class="close-button" src="pytorch.github.io//assets/images/pytorch-x.svg">
+  </div>
+</div>
+
+
+</body>
+
+</html>

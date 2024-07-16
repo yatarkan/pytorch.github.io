@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" type="image/x-icon" href="pytorch.github.io//favicon.ico?">
+  <title>
+    
+      Case Study: PathAI Uses PyTorch to Improve Patient Outcomes with AI-powered Pathology | PyTorch
+    
+  </title>
+  <meta name="robots" content="index, follow" />
+
+<meta name="description" content="​​PathAI is the leading provider of AI-powered technology tools and services for pathology (the study of disease). Our platform was built to enable substantial improvements to the accuracy of diagnosis and the measurement of therapeutic efficacy for complex diseases, leveraging modern approaches in machine learning like image segmentation, graph neural networks, and multiple instance learning.
+
+" />
+
+  <meta property="og:image" content="https://pytorch.orgpytorch.github.io///assets/images/2022-7-15-PathAI-Uses-PyTorch-to-Improve-Patient-Outcomes-with-AI-powered-Pathology-1.png" />
+  <meta name="twitter:image" content="https://pytorch.orgpytorch.github.io///assets/images/2022-7-15-PathAI-Uses-PyTorch-to-Improve-Patient-Outcomes-with-AI-powered-Pathology-1.png" />
+
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Case Study: PathAI Uses PyTorch to Improve Patient Outcomes with AI-powered Pathology" />
+<meta property="og:description" content="​​PathAI is the leading provider of AI-powered technology tools and services for pathology (the study of disease). Our platform was built to enable substantial improvements to the accuracy of diagnosis and the measurement of therapeutic efficacy for complex diseases, leveraging modern approaches in machine learning like image segmentation, graph neural networks, and multiple instance learning.
+
+" />
+<meta property="og:site_name" content="PyTorch" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Case Study: PathAI Uses PyTorch to Improve Patient Outcomes with AI-powered Pathology" />
+<meta name="twitter:description" content="​​PathAI is the leading provider of AI-powered technology tools and services for pathology (the study of disease). Our platform was built to enable substantial improvements to the accuracy of diagnosis and the measurement of therapeutic efficacy for complex diseases, leveraging modern approaches in machine learning like image segmentation, graph neural networks, and multiple instance learning.
+
+" />
+
+  <link rel="stylesheet" href="pytorch.github.io//assets/main.css">
+  <script src="pytorch.github.io//assets/vendor/jquery.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/popper.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/bootstrap.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/anchor.min.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+  
+    <script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=UA-117752657-2"
+></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "UA-117752657-2");
+</script>
+
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '243028289693773');
+    fbq('track', 'PageView');
+</script>
+
+<noscript>
+  <img height="1" width="1"
+  src="https://www.facebook.com/tr?id=243028289693773&ev=PageView
+  &noscript=1"/>
+</noscript>
+
+    <!-- Twitter universal website tag code -->
+<img height="1" width="1" style="display:none;" alt="" src="https://analytics.twitter.com/i/adsct?p_id=Twitter&p_user_id=0&txn_id=o2gi1&events=%5B%5B%22pageview%22%2Cnull%5D%5D&tw_sale_amount=0&tw_order_quantity=0 (https://urldefense.proofpoint.com/v2/url?u=https-3A__analytics.twitter.com_i_adsct-3Fp-5Fid-3DTwitter-26p-5Fuser-5Fid-3D0-26txn-5Fid-3Do2gi1-26events-3D-255B-255B-2522pageview-2522-252Cnull-255D-255D-26tw-5Fsale-5Famount-3D0-26tw-5Forder-5Fquantity-3D0&d=DwMGaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=GMr8XYCDyeQQZuD3noL91A&m=dAJyokk16UvYy-vMrGn_JwYiGfp_eEgo25B9iGDCG-A&s=o6i4D0V0088WH2RnzIoqiF-vj45PL-2sTrsxQ0SNO3A&e=)" />
+<img height="1" width="1" style="display:none;" alt="" src="//t.co/i/adsct?p_id=Twitter&p_user_id=0&txn_id=o2gi1&events=%5B%5B%22pageview%22%2Cnull%5D%5D&tw_sale_amount=0&tw_order_quantity=0 (https://urldefense.proofpoint.com/v2/url?u=https-3A__linkprotect.cudasvc.com_url-3Fa-3Dhttp-253a-252f-252ft.co-252fi-252fadsct-253fp-5Fid-253dTwitter-2526p-5Fuser-5Fid-253d0-2526txn-5Fid-253do2gi1-2526events-253d-25255B-25255B-252522pageview-252522-25252Cnull-25255D-25255D-2526tw-5Fsale-5Famount-253d0-2526tw-5Forder-5Fquantity-253d0-26c-3DE-2C1-2CC33dLwIhtuEcl5FhdztSnUwsioeej5k-2DWy0RYREBAq51kGji32A2Cw94YU9vQBpY5tPN3AukEw3C-5F-2DlbtndnLoR7-5FA-5FLoH0Rr7zLtP1ykptN-26typo-3D1&d=DwMGaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=GMr8XYCDyeQQZuD3noL91A&m=dAJyokk16UvYy-vMrGn_JwYiGfp_eEgo25B9iGDCG-A&s=Abgc3XBkhESv8XBYtLchdDZyISGsK6v_BB6cLMJGyCw&e=)" />
+<!-- End Twitter universal website tag code -->
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <link href="pytorch.github.io//feed.xml" type="application/atom+xml" rel="alternate" title="Pythorch Blog Posts" />
+</head>
+
+
+<body class="blog">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <div class="main-background blog-background blog-detail-background"></div>
+    <div class="hello-bar">
+        <div class="container">
+          Join us in Silicon Valley September 18-19 at the 2024 PyTorch Conference. <a target="_blank" href="https://events.linuxfoundation.org/pytorch-conference/">Learn more</a>.
+        </div>
+      </div>
+      
+    <div class="container-fluid header-holder blog-detail-header">
+        <div class="container">
+            
+
+<div class="header-container">
+  <a class="header-logo" href="https://pytorch.orgpytorch.github.io/" aria-label="PyTorch"></a>
+
+  <div class="main-menu">
+  <ul>
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Learn
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//get-started">
+            <span class=dropdown-title>Get Started</span>
+            <p>Run PyTorch locally or get started quickly with one of the supported cloud platforms</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/">
+            <span class="dropdown-title">Tutorials</span>
+            <p>Whats new in PyTorch tutorials</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/beginner/basics/intro.html">
+            <span class="dropdown-title">Learn the Basics</span>
+            <p>Familiarize yourself with PyTorch concepts and modules</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/recipes/recipes_index.html">
+            <span class="dropdown-title">PyTorch Recipes</span>
+            <p>Bite-size, ready-to-deploy PyTorch code examples</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/beginner/introyt.html">
+            <span class="dropdown-title">Intro to PyTorch - YouTube Series</span>
+            <p>Master PyTorch basics with our engaging YouTube tutorial series</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Ecosystem 
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//ecosystem">
+            <span class="dropdown-title">Tools</span>
+            <p>Learn about the tools and frameworks in the PyTorch Ecosystem</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//#community-module">
+            <span class=dropdown-title>Community</span>
+            <p>Join the PyTorch developer community to contribute, learn, and get your questions answered.</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://discuss.pytorch.org" target="_blank">
+            <span class=dropdown-title>Forums</span>
+            <p>A place to discuss PyTorch code, issues, install, research</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//resources">
+            <span class=dropdown-title>Developer Resources</span>
+            <p>Find resources and get questions answered</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//ecosystem/contributor-awards-2023">
+            <span class="dropdown-title">Contributor Awards - 2023</span>
+            <p>Award winners announced at this year's PyTorch Conference</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Edge 
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//edge">
+            <span class="dropdown-title">About PyTorch Edge</span>
+            <p>Build innovative and privacy-aware AI experiences for edge devices</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//executorch-overview">
+            <span class="dropdown-title">ExecuTorch</span>
+            <p>End-to-end solution for enabling on-device inference capabilities across mobile and edge devices</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="docsDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Docs
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="https://pytorch.org/docs">
+            <span class="dropdown-title">PyTorch</span>
+            <p>Explore the documentation for comprehensive guidance on how to use PyTorch.</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//pytorch-domains">
+            <span class="dropdown-title">PyTorch Domains</span>
+            <p> Read the PyTorch Domains documentation to learn more about domain-specific libraries.</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Blog & News
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//blog">
+            <span class="dropdown-title">PyTorch Blog</span>
+            <p>Catch up on the latest technical news and happenings</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//community-blog">
+            <span class="dropdown-title">Community Blog</span>
+            <p>Stories from the PyTorch ecosystem</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//videos">
+            <span class="dropdown-title">Videos</span>
+            <p>Learn about the latest PyTorch tutorials, new, and more </p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//community-stories">
+            <span class="dropdown-title">Community Stories</span>
+            <p>Learn how our community solves real, everyday machine learning problems with PyTorch</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//events">
+            <span class=dropdown-title>Events</span>
+            <p>Find events, webinars, and podcasts</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          About
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//foundation">
+            <span class=dropdown-title>PyTorch Foundation</span>
+            <p>Learn more about the PyTorch Foundation.</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//governing-board">
+            <span class=dropdown-title>Governing Board</span>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <a href="pytorch.github.io//join" data-cta="join">
+        Become a Member
+      </a>
+    </li>
+
+    <li class="main-menu-item" id="github-main-menu-link">
+      <a href="https://github.com/pytorch/pytorch" title="Go to PyTorch GitHub">
+        <div id="topnav-gh-icon"></div>
+      </a>
+    </li>
+
+    <li class="navSearchWrapper reactNavSearchWrapper" key="search">
+      <div class="search-border">
+        <div id="search-icon"></div>
+        <input
+          id="search-input"
+          type="text"
+          title="Search"
+        />
+        <div id="close-search">X</div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<script src="pytorch.github.io//assets/main-menu-dropdown.js"></script>
+
+
+  <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+</div>
+
+        </div>
+    </div>
+
+    <div class="jumbotron jumbotron-fluid blog-detail-jumbotron">
+        <div class="container blog-detail-container">
+            <p class="featured-post">July 15, 2022</p>
+            <h1>
+                <a class="blog-title">Case Study: PathAI Uses PyTorch to Improve Patient Outcomes with AI-powered Pathology</a>
+            </h1>
+        </div>
+    </div>
+
+    <div class="main-content-wrapper blog-detail-wrapper">
+        <div class="main-content blog-detail-content">
+            <div class="container">
+                <img src="pytorch.github.io//assets/images/logo-icon.svg" class="img-fluid author-icon">
+                <article class="pytorch-article">
+                    <p class="author">
+                      by
+                      
+                        Logan Kilpatrick - Sr. Technology Advocate, Harshith Padigela - ML Engineer, Syed Ashar Javed - ML Technical Lead, Robert Egger - Biomedical Data Scientist
+                      
+                    </p>
+                    <p>​<a href="https://pathai.com">​PathAI</a> is the leading provider of AI-powered technology tools and services for pathology (the study of disease). Our platform was built to enable substantial improvements to the accuracy of diagnosis and the measurement of therapeutic efficacy for complex diseases, leveraging modern approaches in machine learning like image segmentation, graph neural networks, and multiple instance learning.</p>
+
+<p align="center">
+  <img src="/assets/images/2022-7-15-PathAI-Uses-PyTorch-to-Improve-Patient-Outcomes-with-AI-powered-Pathology-1.png" width="100%" />
+</p>
+
+<p>Traditional manual pathology is prone to <a href="https://www.journal-of-hepatology.eu/article/S0168-8278(20)30399-8/fulltext">subjectivity and observer variability</a> that can negatively affect diagnoses and drug development trials. Before we dive into how we use PyTorch to improve our diagnosis workflow, let us first lay out the traditional analog Pathology workflow without machine learning.</p>
+
+<h2 id="how-traditional-biopharma-works">How Traditional Biopharma Works</h2>
+
+<p>There are many avenues that biopharma companies take to discover novel therapeutics or diagnostics. One of those avenues relies heavily on the analysis of pathology slides to answer a variety of questions: how does a particular cellular communication pathway work? Can a specific disease state be linked to the presence or lack of a particular protein? Why did a particular drug in a clinical trial work for some patients but not others? Might there be an association between patient outcomes and a novel biomarker?</p>
+
+<p>To help answer these questions, biopharma companies rely on expert pathologists to analyze slides and help evaluate the questions they might have. </p>
+
+<p>As you might imagine, it takes an expert board certified pathologist to make accurate interpretations and diagnosis. In <a href="https://www.bmj.com/content/357/bmj.j2813.full">one study</a>, a single biopsy result was given to 36 different pathologists and the outcome was 18 different diagnoses varying in severity from no treatment to aggressive treatment necessary. Pathologists also often solicit feedback from colleagues in difficult edge cases. Given the complexity of the problem, even with expert training and collaboration, pathologists can still have a hard time making a correct diagnosis. This potential variance can be the difference between a drug being approved and it failing the clinical trial.</p>
+
+<h2 id="how-pathai-utilizes-machine-learning-to-power-drug-development">How PathAI utilizes machine learning to power drug development</h2>
+
+<p>PathAI develops machine learning models which provide insights for drug development R&amp;D, for powering clinical trials, and for making diagnoses. To this end, PathAI leverages PyTorch for slide level inference using a variety of methods including graph neural networks (GNN) as well as multiple instance learning. In this context, “slides” refers to full size scanned images of glass slides, which are pieces of glass with a thin slice of tissue between them, stained to show various cell formations. PyTorch enables our teams using these different methodologies to share a common framework which is robust enough to work in all the conditions we need. PyTorch’s high level, imperative, and pythonic syntax allows us to prototype models quickly and then take those models to scale once we have the results we want. </p>
+
+<h2 id="multi-instance-learning-on-gigabyte-images">Multi-instance learning on gigabyte images</h2>
+
+<p>One of the uniquely challenging aspects of applying ML to pathology is the immense size of the images. These digital slides can often be 100,000 x 100,000 pixels or more in resolution and gigabytes in size. Loading the full image in GPU memory and applying traditional computer vision algorithms on them is an almost impossible task. It also takes both a considerable amount of time and resources to have a full slide image (100k x 100k) annotated, especially when annotators need to be domain experts (board-certified pathologists). We often build models to predict image-level labels, like the presence of cancer, on a patient slide which covers a few thousand pixels in the whole image. The cancerous area is sometimes a tiny fraction of the entire slide, which makes the ML problem similar to finding a needle in a haystack. On the other hand, some problems like the prediction of certain histological biomarkers require an aggregation of information from the whole slide which is again hard due to the size of the images. All these factors add significant algorithmic, computational, and logistical complexity when applying ML techniques to pathology problems.</p>
+
+<p>Breaking down the image into smaller patches, learning patch representations, and then pooling those representations to predict an image-level label is one way to solve this problem as is depicted in the image below. One popular method for doing this is called <a href="https://paperswithcode.com/task/multiple-instance-learning">Multiple Instance Learning (MIL)</a>. Each patch is considered an ‘instance’ and a set of patches forms a ‘bag’. The individual patch representations are pooled together to predict a final bag-level label. Algorithmically, the individual patch instances in the bag do not require labels and hence allow us to learn bag-level labels in a weakly-supervised way. They also use permutation invariant pooling functions which make the prediction independent of the order of patches and allows for an efficient aggregation of information. Typically, attention based pooling functions are used which not only allow for efficient aggregation but also provide attention values for each patch in the bag. These values indicate the importance of the corresponding patch in the prediction and can be visualized to better understand the model predictions. This element of interpretability can be very important to drive adoption of these models in the real world and we use variations like <a href="https://arxiv.org/pdf/2206.01794.pdf">Additive MIL models</a> to enable such spatial explainability. Computationally, MIL models circumvent the problem of applying neural networks to large image sizes since patch representations are obtained independently of the size of the image.</p>
+
+<p align="center">
+  <img src="/assets/images/2022-7-15-PathAI-Uses-PyTorch-to-Improve-Patient-Outcomes-with-AI-powered-Pathology-2.png" width="100%" />
+</p>
+
+<p>At PathAI, we use custom MIL models based on deep nets to predict image-level labels. The overview of this process is as follows:</p>
+
+<ol>
+  <li>Select patches from a slide using different sampling approaches.</li>
+  <li>Construct a bag of patches based on random sampling or heuristic rules.</li>
+  <li>Generate patch representations for each instance based on pre-trained models or large-scale representation learning models.</li>
+  <li>Apply permutation invariant pooling functions to get the final slide-level score.</li>
+</ol>
+
+<p>Now that we have walked through some of the high-level details around MIL in PyTorch, let’s look at some code to see how simple it is to go from ideation to code in production with PyTorch. We begin by defining a sampler, transformations, and our MIL dataset:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a bag sampler which randomly samples patches from a slide
+</span><span class="n">bag_sampler</span> <span class="o">=</span> <span class="n">RandomBagSampler</span><span class="p">(</span><span class="n">bag_size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="c1"># Setup the transformations
+</span><span class="n">crop_transform</span> <span class="o">=</span> <span class="n">FlipRotateCenterCrop</span><span class="p">(</span><span class="n">use_flips</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># Create the dataset which loads patches for each bag
+</span><span class="n">train_dataset</span> <span class="o">=</span> <span class="n">MILDataset</span><span class="p">(</span>
+  <span class="n">bag_sampler</span><span class="o">=</span><span class="n">bag_sampler</span><span class="p">,</span>
+  <span class="n">samples_loader</span><span class="o">=</span><span class="n">sample_loader</span><span class="p">,</span>
+  <span class="n">transform</span><span class="o">=</span><span class="n">crop_transform</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>After we have defined our sampler and dataset, we need to define the model we will actually train with said dataset. PyTorch’s familiar model definition syntax makes this easy to do while also allowing us to create bespoke models at the same time.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">classifier</span> <span class="o">=</span> <span class="n">DefaultPooledClassifier</span><span class="p">(</span><span class="n">hidden_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">],</span> <span class="n">input_dims</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">output_dims</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pooling</span> <span class="o">=</span> <span class="n">DefaultAttentionModule</span><span class="p">(</span>
+  <span class="n">input_dims</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+  <span class="n">hidden_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">],</span>
+  <span class="n">output_activation</span><span class="o">=</span><span class="n">StableSoftmax</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># Define the model which is a composition of the featurizer, pooling module and a classifier
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">DefaultMILGraph</span><span class="p">(</span><span class="n">featurizer</span><span class="o">=</span><span class="n">ShuffleNetV2</span><span class="p">(),</span> <span class="n">classifier</span><span class="o">=</span><span class="n">classifier</span><span class="p">,</span> <span class="n">pooling</span> <span class="o">=</span> <span class="n">pooling</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Since these models are trained end-to-end, they offer a powerful way to go directly from a gigapixel whole slide image to a single label. Due to their wide applicability to different biological problems, two aspects of their implementation and deployment are important:</p>
+
+<ol>
+  <li>Configurable control over each part of the pipeline including the data loaders, the modular parts of the model, and their interaction with each other.</li>
+  <li>Ability to rapidly iterate through the ideate-implement-experiment-productionize loop.</li>
+</ol>
+
+<p>PyTorch has various advantages when it comes to MIL modeling. It offers an intuitive way to create dynamic computational graphs with flexible control flow which is great for rapid research experimentation. The map-style datasets, configurable sampler and batch-samplers allow us to customize how we construct bags of patches, enabling faster experimentation. Since MIL models are IO heavy, data parallelism and pythonic data loaders make the task very efficient and user friendly. Lastly, the object-oriented nature of PyTorch enables building of reusable modules which aid in the rapid experimentation, maintainable implementation and ease of building compositional components of the pipeline.</p>
+
+<h2 id="exploring-spatial-tissue-organization-with-gnns-in-pytorch">Exploring spatial tissue organization with GNNs in PyTorch</h2>
+
+<p align="center">
+  <img src="/assets/images/2022-7-15-PathAI-Uses-PyTorch-to-Improve-Patient-Outcomes-with-AI-powered-Pathology-3.png" width="100%" />
+</p>
+
+<p>In both healthy and diseased tissue, the spatial arrangement and structure of cells can oftentimes be as important as the cells themselves. For example, when assessing lung cancers, pathologists try to look at the overall grouping and structure of tumor cells (do they form solid sheets? Or do they occur in smaller, localized clusters?) to determine if the cancer belongs to specific subtypes which can have vastly <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3369269/">different prognosis</a>. Such spatial relationships between cells and other tissue structures can be modeled using graphs to capture tissue topology and cellular composition at the same time. <a href="https://openaccess.thecvf.com/content_CVPRW_2020/papers/w16/Lu_Capturing_Cellular_Topology_in_Multi-Gigapixel_Pathology_Images_CVPRW_2020_paper.pdf">Graph Neural Networks</a> (GNNs) allow learning spatial patterns within these graphs that relate to other clinical variables, for example overexpression of genes in certain cancers.</p>
+
+<p>In late 2020, when PathAI started using GNNs on tissue samples, PyTorch had the best and most mature support for GNN functionality via the <a href="https://pytorch-geometric.readthedocs.io/en/latest/">PyG package</a>. This made PyTorch the natural choice for our team given that GNN models were something that we knew would be an important ML concept we wanted to explore. </p>
+
+<p>One of the main value-adds of GNN’s in the context of tissue samples is that the graph itself can uncover spatial relationships that would otherwise be very difficult to find by visual inspection alone. In our recent <a href="https://aacrjournals.org/cancerres/article/82/12_Supplement/1922/701539">AACR publication</a>, we showed that by using GNNs, we can better understand the way the presence of immune cell aggregates (specifically tertiary lymphoid structures, or TLS) in the tumor microenvironment can influence patient prognosis. In this case, the GNN approach was used to predict expression of genes associated with the presence of TLS, and identify histological features beyond the TLS region itself that are relevant to TLS. Such insights into gene expression are difficult to identify from tissue sample images when unassisted by ML models. </p>
+
+<p>One of the most promising GNN variations we have had success with is <a href="https://arxiv.org/pdf/1904.08082.pdf">self attention graph pooling</a>. Let’s take a look at how we define our Self Attention Graph Pooling (SAGPool) model using PyTorch and PyG:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SAGPool</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">...):</span>
+    <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">GraphConv</span><span class="p">(</span><span class="n">in_features</span><span class="p">,</span> <span class="n">hidden_features</span><span class="p">,</span> <span class="n">aggr</span><span class="o">=</span><span class="s">'mean'</span><span class="p">)</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">convs</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">ModuleList</span><span class="p">()</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">pools</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">ModuleList</span><span class="p">()</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">convs</span><span class="p">.</span><span class="n">extend</span><span class="p">([</span><span class="n">GraphConv</span><span class="p">(</span><span class="n">hidden_features</span><span class="p">,</span> <span class="n">hidden_features</span><span class="p">,</span> <span class="n">aggr</span><span class="o">=</span><span class="s">'mean'</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">pools</span><span class="p">.</span><span class="n">extend</span><span class="p">([</span><span class="n">SAGPooling</span><span class="p">(</span><span class="n">hidden_features</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">GNN</span><span class="o">=</span><span class="n">GraphConv</span><span class="p">,</span> <span class="n">min_score</span><span class="o">=</span><span class="n">min_score</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="n">num_layers</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)])</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">jump</span> <span class="o">=</span> <span class="n">JumpingKnowledge</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s">'cat'</span><span class="p">)</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">lin1</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">num_layers</span> <span class="o">*</span> <span class="n">hidden_features</span><span class="p">,</span> <span class="n">hidden_features</span><span class="p">)</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">lin2</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">hidden_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">)</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">out_activation</span> <span class="o">=</span> <span class="n">out_activation</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+</code></pre></div></div>
+
+<p>In the above code, we begin by defining a single convolutional graph layer and then add two <a href="https://pytorch.org/docs/stable/generated/torch.nn.ModuleList.html">module list layers</a> which allow us to pass in a variable number of layers. We then take our <a href="https://pytorch.org/docs/stable/generated/torch.nn.ModuleList.html?highlight=extend#torch.nn.ModuleList.extend">empty module list and append</a> a variable number of <code class="language-plaintext highlighter-rouge">GraphConv</code> layers followed by a variable number of <code class="language-plaintext highlighter-rouge">SAGPooling</code> layers. We finish up our <code class="language-plaintext highlighter-rouge">SAGPool</code> definition by adding a <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.models.JumpingKnowledge">JumpingKnowledge Layer</a>, two linear layers, our activation function, and our dropout value. PyTorch’s intuitive syntax allows us to abstract away the complexity of working with state of the art methods like SAG Poolings while also maintaining the common approach to model development we are familiar with.</p>
+
+<p>Models like our SAG Pool one described above are just one example of how GNNs with PyTorch are allowing us to explore new and novel ideas. We also recently explored <a href="https://openaccess.thecvf.com/content/CVPR2022W/CVMI/papers/Dwivedi_Multi_Stain_Graph_Fusion_for_Multimodal_Integration_in_Pathology_CVPRW_2022_paper.pdf">multimodal CNN - GNN hybrid models</a> which ended up being 20% more accurate than traditional Pathologist consensus scores. These innovations and interplay between traditional CNNs and GNNs are again enabled by the short research to production model development loop.</p>
+
+<h2 id="improving-patient-outcomes">Improving Patient Outcomes</h2>
+<p>In order to achieve our mission of improving patient outcomes with AI-powered pathology, PathAI needs to rely on an ML development framework that (1) facilitates quick iteration and easy extension (i.e. Model configuration as code) during initial phases of development and exploration (2) scales model training and inference to massive images (3) easily and robustly serves models for production uses of our products (in clinical trials and beyond). As we’ve demonstrated, PyTorch offers us all of these capabilities and more. We are incredibly excited about the future of PyTorch and cannot wait to see what other impactful challenges we can solve using the framework.</p>
+
+                </article>
+            </div>
+        </div>
+    </div>
+
+<!--    
+
+
+ -->
+    <div class="container-fluid docs-tutorials-resources">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <h2>Docs</h2>
+        <p>Access comprehensive developer documentation for PyTorch</p>
+        <a class="with-right-arrow" href="pytorch.github.io//docs">View Docs</a>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <h2>Tutorials</h2>
+        <p>Get in-depth tutorials for beginners and advanced developers</p>
+        <a class="with-right-arrow" href="https://pytorch.org/tutorials">View Tutorials</a>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <h2>Resources</h2>
+        <p>Find development resources and get your questions answered</p>
+        <a class="with-right-arrow" href="pytorch.github.io//resources">View Resources</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-container">
+    <div class="lf-grid">
+      <div class="footer-logo-wrapper">
+        <a href="https://pytorch.orgpytorch.github.io/" class="footer-logo">
+          <img src="/assets/images/logo-icon.svg" alt="PyTorch logo" width="40">
+        </a>
+      </div>
+
+      <ul class="social-links">
+        <li><a href="https://www.facebook.com/pytorch" target="_blank" title="PyTorch on Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="-0.51 -0.26 26.45 26.45" aria-label="Facebook"><path fill="currentColor" d="M25.497 13.075c0-2.45-.698-4.848-2.011-6.911a12.765 12.765 0 0 0-5.398-4.73A12.671 12.671 0 0 0 11.008.38a12.705 12.705 0 0 0-6.529 2.95A12.827 12.827 0 0 0 .563 9.358a12.896 12.896 0 0 0-.07 7.201 12.831 12.831 0 0 0 3.801 6.103 12.709 12.709 0 0 0 6.471 3.078v-8.957H7.53v-3.708h3.235v-2.824c0-3.213 1.903-4.988 4.813-4.988.956.014 1.909.097 2.852.25V8.67h-1.607a1.83 1.83 0 0 0-1.518.497 1.854 1.854 0 0 0-.561 1.505v2.404h3.535l-.563 3.708h-2.97v8.957a12.725 12.725 0 0 0 7.697-4.337 12.87 12.87 0 0 0 3.054-8.328z"/></svg>	
+        </a></li>
+        <li><a href="https://twitter.com/pytorch" target="_blank" title="PyTorch on X">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 300 300" aria-label="X"><path fill="currentColor" d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59h89.34M36.01 19.54H76.66l187.13 262.13h-40.66"/></svg>
+        </a></li>
+        <li><a href="https://www.youtube.com/pytorch" target="_blank" title="PyTorch on YouTube">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="0.21 0.27 34.45 25.07" aria-label="YouTube"><path fill="currentColor" d="M33.729 6.084s-.327-2.33-1.317-3.356a4.691 4.691 0 0 0-3.32-1.432c-4.634-.34-11.589-.34-11.589-.34h-.014s-6.954 0-11.59.342a4.692 4.692 0 0 0-3.32 1.432c-.993 1.025-1.315 3.354-1.315 3.354a52.189 52.189 0 0 0-.331 5.473v2.566c.014 1.829.125 3.656.331 5.472 0 0 .322 2.33 1.316 3.36 1.26 1.345 2.916 1.3 3.653 1.445 2.65.26 11.263.34 11.263.34s6.96-.01 11.597-.353a4.691 4.691 0 0 0 3.32-1.432c.993-1.026 1.316-3.356 1.316-3.356.206-1.817.316-3.644.33-5.473v-2.57a52.26 52.26 0 0 0-.33-5.472zM14.076 17.232V7.729l8.951 4.768-8.95 4.735z"/></svg>	
+        </a></li>
+        <li><a href="https://www.linkedin.com/company/pytorch" target="_blank" title="PyTorch on LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="-10.23 -10.23 531.96 531.96" aria-label="LinkedIn"><rect width="512" height="512" rx="0" fill="currentColor"/><circle fill="#000" cx="142" cy="138" r="37"/><path stroke="#000" stroke-width="66" d="M244 194v198M142 194v198"/><path fill="#000" d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+        </a></li>
+        <li><a href="https://social.lfx.dev/@pytorch" rel="me" target="_blank" title="PyTorch on Mastodon">
+          <svg fill="currentColor" aria-label="Mastodon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"><path d="M21.327 8.566c0-4.339-2.843-5.61-2.843-5.61-1.433-.658-3.894-.935-6.451-.956h-.063c-2.557.021-5.016.298-6.45.956 0 0-2.843 1.272-2.843 5.61 0 .993-.019 2.181.012 3.441.103 4.243.778 8.425 4.701 9.463 1.809.479 3.362.579 4.612.51 2.268-.126 3.541-.809 3.541-.809l-.075-1.646s-1.621.511-3.441.449c-1.804-.062-3.707-.194-3.999-2.409a4.523 4.523 0 0 1-.04-.621s1.77.433 4.014.536c1.372.063 2.658-.08 3.965-.236 2.506-.299 4.688-1.843 4.962-3.254.434-2.223.398-5.424.398-5.424zm-3.353 5.59h-2.081V9.057c0-1.075-.452-1.62-1.357-1.62-1 0-1.501.647-1.501 1.927v2.791h-2.069V9.364c0-1.28-.501-1.927-1.502-1.927-.905 0-1.357.546-1.357 1.62v5.099H6.026V8.903c0-1.074.273-1.927.823-2.558.566-.631 1.307-.955 2.228-.955 1.065 0 1.872.409 2.405 1.228l.518.869.519-.869c.533-.819 1.34-1.228 2.405-1.228.92 0 1.662.324 2.228.955.549.631.822 1.484.822 2.558v5.253z"/></svg>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="privacy-policy">
+      <div class="copyright">
+        <p>© Copyright The Linux Foundation. The PyTorch Foundation is a project of The Linux Foundation. 
+          For web site terms of use, trademark policy and other policies applicable to The PyTorch Foundation please see 
+          <a href="https://www.linuxfoundation.org/legal/policies/">Linux Foundation Policies</a>. The PyTorch Foundation supports the PyTorch open source 
+          project, which has been established as PyTorch Project a Series of LF Projects, LLC. For policies applicable to the PyTorch Project a Series of LF Projects, LLC, 
+          please see <a href="https://www.lfprojects.org/policies/">LF Projects, LLC Policies</a>. <a href="https://www.linuxfoundation.org/privacy">Privacy Policy</a> and <a href="https://www.linuxfoundation.org/terms">Terms of Use</a>.</p>
+      </div>
+    </div>
+  </div>
+  <img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0"/>
+
+</footer>
+
+<div class="mobile-main-menu">
+  <div class="container-fluid">
+    <div class="container">
+      <div class="mobile-main-menu-header-container">
+        <a class="header-logo" href="https://pytorch.orgpytorch.github.io/" aria-label="PyTorch"></a>
+        <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-main-menu-links-container">
+
+    <div class="main-menu">
+      <ul>
+        <li class="navSearchWrapper reactNavSearchWrapper tabletSearchWrapper" key="search">
+          <div class="mobile-search-border">
+            <input
+              id="mobile-search-input"
+              type="text"
+              title="Search"
+            />
+            <div id="mobile-search-icon"></div>
+          </div>
+        </li>
+
+        <li class="resources-mobile-menu-title">
+          <a>Learn</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//get-started">Get Started</a> 
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials">Tutorials</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/beginner/basics/intro.html">Learn the Basics</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/recipes/recipes_index.html">PyTorch Recipes</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/beginner/introyt.html">Introduction to PyTorch - YouTube Series</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Ecosystem</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//ecosystem">Tools</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//#community-module">Community</a>
+          </li>
+          <li>
+            <a href="https://discuss.pytorch.org">Forums</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//resources">Developer Resources</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//ecosystem/contributor-awards-2023">Contributor Awards - 2023</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Edge</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//edge">About PyTorch Edge</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//executorch-overview">ExecuTorch</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Docs</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="https://pytorch.org/docs">PyTorch</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//pytorch-domains">PyTorch Domains</a>
+          </li>
+        </ul>
+
+        <li class="resources-mobile-menu-title">
+          <a>Blog & News</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//blog">PyTorch Blog</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//community-blog">Community Blog</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//videos">Videos</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//community-stories">Community Stories</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//events">Events</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>About</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//foundation">PyTorch Foundation</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//governing-board">Governing Board</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a href="pytorch.github.io//join">Become a Member</a>
+        </li>
+        <li class="resources-mobile-menu-title">
+          <a href="https://github.com/pytorch/pytorch" title="Go to PyTorch GitHub"><div id="topnav-gh-icon"></div></a>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<script src="pytorch.github.io//assets/mobile-menu.js"></script>
+<script src="pytorch.github.io//assets/scroll-to-anchor.js"></script>
+<script src="pytorch.github.io//assets/external-links-new-tab.js"></script>
+
+  <script src="pytorch.github.io//assets/search-bar.js"></script>
+
+<script src="pytorch.github.io//assets/cookie-banner.js"></script>
+
+<script type="text/javascript">
+  mobileMenu.bind();
+  anchors.add('.pytorch-article h2, .pytorch-article h3, .pytorch-article h4, .pytorch-article h5');
+
+  // Add class to links that have code blocks, since we cannot create links in code blocks
+  $("a code.highlighter-rouge").each(function(e) {
+    $(this).closest("a").addClass("has-code");
+  });
+
+  scrollToAnchor.bind();
+
+  var hasStaticHeader = $(".blog-header, .blog-detail-header, .resources-header, .get-started-header, .features-header, .ecosystem-header, .hub-header, .mobile-header, .announcement-header, .comm-stories-header").length > 0;
+
+  if (!hasStaticHeader) {
+    $(window).on("scroll", function() {
+      var top = $(this).scrollTop();
+      var fullPosition = $(".main-background").height() - $(".header-holder").height();
+
+      if (top <= 40) {
+        $(".header-holder").css({"backgroundColor": "rgba(0, 0, 0, 0.165)"});
+      } else if (top >= fullPosition) {
+        $(".header-holder").css({"backgroundColor": "#000000"});
+      } else {
+        var bgColor = "rgba(0, 0, 0, " + top / fullPosition + ")";
+        $(".header-holder").css({"backgroundColor": bgColor});
+      }
+    });
+  }
+</script>
+
+
+  <script src="pytorch.github.io//assets/track-events.js"></script>
+  <script>trackEvents.bind();</script>
+
+
+
+<div class="cookie-banner-wrapper">
+  <div class="container">
+    <p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
+    <img class="close-button" src="pytorch.github.io//assets/images/pytorch-x.svg">
+  </div>
+</div>
+
+
+</body>
+
+</html>

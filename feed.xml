@@ -2,10 +2,10 @@
 
 <feed xmlns="http://www.w3.org/2005/Atom" >
   <generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
-  <link href="https://pytorch.org/feed.xml" rel="self" type="application/atom+xml" />
-  <link href="https://pytorch.org/" rel="alternate" type="text/html" />
-  <updated>2024-07-16T09:07:35-07:00</updated>
-  <id>https://pytorch.org/feed.xml</id>
+  <link href="https://pytorch.org/pytorch.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://pytorch.org/pytorch.github.io/" rel="alternate" type="text/html" />
+  <updated>2024-07-16T10:20:26-07:00</updated>
+  <id>https://pytorch.org/pytorch.github.io/feed.xml</id>
 
   
   
@@ -32,11 +32,11 @@
   
     <entry>
       <title type="html">Announcing Hacker Cup AI Track at NeurIPS 2024</title>
-      <link href="https://pytorch.org/blog/hacker-cup/" rel="alternate" type="text/html" title="Announcing Hacker Cup AI Track at NeurIPS 2024" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/hacker-cup/" rel="alternate" type="text/html" title="Announcing Hacker Cup AI Track at NeurIPS 2024" />
       <published>2024-07-03T00:00:00-07:00</published>
       <updated>2024-07-03T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/hacker-cup</id>
-      <content type="html" xml:base="https://pytorch.org/blog/hacker-cup/">&lt;p&gt;The PyTorch team in partnership with Meta Hacker Cup, and Microsoft Research, are excited to announce the Hacker Cup AI Track at NeurIPS 2024. This will be the first AI track for the popular Meta Hacker Cup programming competition designed to assess the capabilities of Generative AI in performing autonomous code generation tasks. We aim to test the limits of AI in complex coding challenges and measure the performance gap between AI systems and human programmers. We will provide access to all Hacker Cup problems since 2011 alongside their respective solutions in a multimodal (image and text) format, and utilize the existing Hacker Cup infrastructure for competitor evaluation. Featuring both &lt;em&gt;open evaluation, open model&lt;/em&gt; and &lt;em&gt;open evaluation, closed model&lt;/em&gt; tracks, this competition invites diverse participation from research institutions of varied interests and resource constraints, including academic labs, AI startups, large technology companies, and AI enthusiasts. Our goal is to develop and democratize meaningful advancements in code automation with the very first open evaluation process for competitive AI programmers. Registration will begin in &lt;strong&gt;Early August&lt;/strong&gt;, with our first qualification round on &lt;strong&gt;September 20th.&lt;/strong&gt;&lt;/p&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/hacker-cup</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/hacker-cup/">&lt;p&gt;The PyTorch team in partnership with Meta Hacker Cup, and Microsoft Research, are excited to announce the Hacker Cup AI Track at NeurIPS 2024. This will be the first AI track for the popular Meta Hacker Cup programming competition designed to assess the capabilities of Generative AI in performing autonomous code generation tasks. We aim to test the limits of AI in complex coding challenges and measure the performance gap between AI systems and human programmers. We will provide access to all Hacker Cup problems since 2011 alongside their respective solutions in a multimodal (image and text) format, and utilize the existing Hacker Cup infrastructure for competitor evaluation. Featuring both &lt;em&gt;open evaluation, open model&lt;/em&gt; and &lt;em&gt;open evaluation, closed model&lt;/em&gt; tracks, this competition invites diverse participation from research institutions of varied interests and resource constraints, including academic labs, AI startups, large technology companies, and AI enthusiasts. Our goal is to develop and democratize meaningful advancements in code automation with the very first open evaluation process for competitive AI programmers. Registration will begin in &lt;strong&gt;Early August&lt;/strong&gt;, with our first qualification round on &lt;strong&gt;September 20th.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;For more information please visit our website at &lt;a href=&quot;https://www.facebook.com/codingcompetitions/hacker-cup/&quot;&gt;https://www.facebook.com/codingcompetitions/hacker-cup/&lt;/a&gt; &lt;strong&gt;and join our Discord&lt;/strong&gt; at &lt;a href=&quot;https://discord.com/invite/wWeN9hTH32&quot;&gt;discord.gg/wWeN9hTH32&lt;/a&gt;&lt;/p&gt;</content>
 
@@ -66,11 +66,11 @@
   
     <entry>
       <title type="html">Powering the AI Revolution: The PyTorch Documentary</title>
-      <link href="https://pytorch.org/blog/pytorch-documentary/" rel="alternate" type="text/html" title="Powering the AI Revolution: The PyTorch Documentary" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/pytorch-documentary/" rel="alternate" type="text/html" title="Powering the AI Revolution: The PyTorch Documentary" />
       <published>2024-06-25T00:00:00-07:00</published>
       <updated>2024-06-25T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/pytorch-documentary</id>
-      <content type="html" xml:base="https://pytorch.org/blog/pytorch-documentary/">&lt;p&gt;Now live: The official &lt;a href=&quot;https://www.youtube.com/live/EjgTv6aSeqk&quot;&gt;PyTorch Documentary&lt;/a&gt;! This film unveils the authentic narrative of PyTorch’s inception, attributing its existence to a dedicated group of unsung heroes driving technological innovation.&lt;/p&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/pytorch-documentary</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/pytorch-documentary/">&lt;p&gt;Now live: The official &lt;a href=&quot;https://www.youtube.com/live/EjgTv6aSeqk&quot;&gt;PyTorch Documentary&lt;/a&gt;! This film unveils the authentic narrative of PyTorch’s inception, attributing its existence to a dedicated group of unsung heroes driving technological innovation.&lt;/p&gt;
 
 &lt;p&gt;The documentary shares the strength of the PyTorch community, resonating with our communities across the globe. We hope this story of PyTorch inspires greater contributions, attracts more contributors to the project, and fosters widespread recognition of PyTorch’s significance in the open source community.&lt;/p&gt;
 
@@ -142,11 +142,11 @@
   
     <entry>
       <title type="html">Training MoEs at Scale with PyTorch</title>
-      <link href="https://pytorch.org/blog/training-moes/" rel="alternate" type="text/html" title="Training MoEs at Scale with PyTorch" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/training-moes/" rel="alternate" type="text/html" title="Training MoEs at Scale with PyTorch" />
       <published>2024-06-23T00:00:00-07:00</published>
       <updated>2024-06-23T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/training-moes</id>
-      <content type="html" xml:base="https://pytorch.org/blog/training-moes/">&lt;p&gt;Over the past year, Mixture of Experts (MoE) models have surged in popularity, fueled by powerful open-source models like &lt;a href=&quot;https://www.databricks.com/blog/introducing-dbrx-new-state-art-open-llm&quot;&gt;DBRX&lt;/a&gt;, &lt;a href=&quot;https://mistral.ai/news/mixtral-of-experts/&quot;&gt;Mixtral&lt;/a&gt;, &lt;a href=&quot;https://github.com/deepseek-ai/DeepSeek-V2&quot;&gt;DeepSeek&lt;/a&gt;, and many more. At Databricks, we’ve worked closely with the PyTorch team to scale training of MoE models. In this blog post, we’ll talk about how we scale to over three thousand GPUs using &lt;a href=&quot;https://pytorch.org/tutorials/beginner/dist_overview.html&quot;&gt;PyTorch Distributed&lt;/a&gt; and &lt;a href=&quot;https://github.com/databricks/megablocks&quot;&gt;MegaBlocks&lt;/a&gt;, an efficient open-source MoE implementation in PyTorch.&lt;/p&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/training-moes</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/training-moes/">&lt;p&gt;Over the past year, Mixture of Experts (MoE) models have surged in popularity, fueled by powerful open-source models like &lt;a href=&quot;https://www.databricks.com/blog/introducing-dbrx-new-state-art-open-llm&quot;&gt;DBRX&lt;/a&gt;, &lt;a href=&quot;https://mistral.ai/news/mixtral-of-experts/&quot;&gt;Mixtral&lt;/a&gt;, &lt;a href=&quot;https://github.com/deepseek-ai/DeepSeek-V2&quot;&gt;DeepSeek&lt;/a&gt;, and many more. At Databricks, we’ve worked closely with the PyTorch team to scale training of MoE models. In this blog post, we’ll talk about how we scale to over three thousand GPUs using &lt;a href=&quot;https://pytorch.org/tutorials/beginner/dist_overview.html&quot;&gt;PyTorch Distributed&lt;/a&gt; and &lt;a href=&quot;https://github.com/databricks/megablocks&quot;&gt;MegaBlocks&lt;/a&gt;, an efficient open-source MoE implementation in PyTorch.&lt;/p&gt;
 
 &lt;h2 id=&quot;what-is-a-moe&quot;&gt;What is a MoE?&lt;/h2&gt;
 
@@ -242,11 +242,11 @@
   
     <entry>
       <title type="html">Accelerating Neural Network Training with Semi-Structured (2:4) Sparsity</title>
-      <link href="https://pytorch.org/blog/accelerating-neural-network-training/" rel="alternate" type="text/html" title="Accelerating Neural Network Training with Semi-Structured (2:4) Sparsity" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/accelerating-neural-network-training/" rel="alternate" type="text/html" title="Accelerating Neural Network Training with Semi-Structured (2:4) Sparsity" />
       <published>2024-06-20T00:00:00-07:00</published>
       <updated>2024-06-20T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/accelerating-neural-network-training</id>
-      <content type="html" xml:base="https://pytorch.org/blog/accelerating-neural-network-training/">&lt;p&gt;Over the past year, we’ve added support for semi-structured (2:4) sparsity into PyTorch. With just a few lines of code, we were able to show a 10% end-to-end inference speedup on &lt;a href=&quot;https://github.com/pytorch/ao/tree/main/torchao/sparsity#segment-anything&quot;&gt;segment-anything&lt;/a&gt; by replacing dense matrix multiplications with sparse matrix multiplications.&lt;/p&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/accelerating-neural-network-training</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/accelerating-neural-network-training/">&lt;p&gt;Over the past year, we’ve added support for semi-structured (2:4) sparsity into PyTorch. With just a few lines of code, we were able to show a 10% end-to-end inference speedup on &lt;a href=&quot;https://github.com/pytorch/ao/tree/main/torchao/sparsity#segment-anything&quot;&gt;segment-anything&lt;/a&gt; by replacing dense matrix multiplications with sparse matrix multiplications.&lt;/p&gt;
 
 &lt;p&gt;However, matrix multiplications are not unique to neural network inference - they happen during training as well. By expanding on the core primitives we used earlier to accelerate inference, we were also able to accelerate model training. We wrote a replacement nn.Linear layer, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SemiSparseLinear&lt;/code&gt;, that is able to achieve a 1.3x &lt;a href=&quot;https://github.com/pytorch/ao/tree/main/torchao/sparsity/training#benchmarking&quot;&gt;speedup&lt;/a&gt; across the forwards + backwards pass of the linear layers in the MLP block of ViT-L on a NVIDIA A100.&lt;/p&gt;
 
@@ -492,11 +492,11 @@
   
     <entry>
       <title type="html">🎉 PyTorch Docathon H1 2024 Wrap-up 🎉</title>
-      <link href="https://pytorch.org/blog/pytorch-docathon-h2-2024-wrap-up/" rel="alternate" type="text/html" title="🎉 PyTorch Docathon H1 2024 Wrap-up 🎉" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/pytorch-docathon-h2-2024-wrap-up/" rel="alternate" type="text/html" title="🎉 PyTorch Docathon H1 2024 Wrap-up 🎉" />
       <published>2024-06-20T00:00:00-07:00</published>
       <updated>2024-06-20T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/pytorch-docathon-h2-2024-wrap-up</id>
-      <content type="html" xml:base="https://pytorch.org/blog/pytorch-docathon-h2-2024-wrap-up/">&lt;p&gt;We are thrilled to announce the successful completion of the H1 2024 PyTorch Docathon! The event was a resounding success, and we want to extend our heartfelt gratitude to all the participants who made it possible. Dedication, expertise, and tireless efforts of our open-source contributors have once again helped us to improve PyTorch documentation.&lt;/p&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/pytorch-docathon-h2-2024-wrap-up</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/pytorch-docathon-h2-2024-wrap-up/">&lt;p&gt;We are thrilled to announce the successful completion of the H1 2024 PyTorch Docathon! The event was a resounding success, and we want to extend our heartfelt gratitude to all the participants who made it possible. Dedication, expertise, and tireless efforts of our open-source contributors have once again helped us to improve PyTorch documentation.&lt;/p&gt;
 
 &lt;p&gt;This Docathon ran from June 4 through June 20 with more than 176 registrants. The energy and enthusiasm were palpable, and entrants were judged on the difficulty of submissions that resulted in over 50 merged pull requests.&lt;/p&gt;
 
@@ -545,11 +545,11 @@
   
     <entry>
       <title type="html">Reducing Model Checkpointing Times by Over 10x with PyTorch Distributed Asynchronous Checkpointing</title>
-      <link href="https://pytorch.org/blog/reducing-checkpointing-times/" rel="alternate" type="text/html" title="Reducing Model Checkpointing Times by Over 10x with PyTorch Distributed Asynchronous Checkpointing" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/reducing-checkpointing-times/" rel="alternate" type="text/html" title="Reducing Model Checkpointing Times by Over 10x with PyTorch Distributed Asynchronous Checkpointing" />
       <published>2024-06-12T00:00:00-07:00</published>
       <updated>2024-06-12T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/reducing-checkpointing-times</id>
-      <content type="html" xml:base="https://pytorch.org/blog/reducing-checkpointing-times/">&lt;p&gt;&lt;strong&gt;Summary:&lt;/strong&gt;   With PyTorch distributed’s new asynchronous checkpointing feature, developed with feedback from IBM, we show how IBM Research Team is able to implement and reduce effective checkpointing time by a factor of 10-20x.  Example: 7B model ‘down time’ for a checkpoint goes from an average of 148.8 seconds to 6.3 seconds, or 23.62x faster.&lt;/p&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/reducing-checkpointing-times</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/reducing-checkpointing-times/">&lt;p&gt;&lt;strong&gt;Summary:&lt;/strong&gt;   With PyTorch distributed’s new asynchronous checkpointing feature, developed with feedback from IBM, we show how IBM Research Team is able to implement and reduce effective checkpointing time by a factor of 10-20x.  Example: 7B model ‘down time’ for a checkpoint goes from an average of 148.8 seconds to 6.3 seconds, or 23.62x faster.&lt;/p&gt;
 
 &lt;p&gt;This directly translates into either more net training progress for every given 24 hour period while continuing to robustly checkpoint or more frequent checkpoints to shorten recovery window/time.&lt;/p&gt;
 
@@ -640,11 +640,11 @@ Then train as usual but at the point when you want to checkpoint, use the asynch
   
     <entry>
       <title type="html">PyTorch Foundation Welcomes New Executive Director</title>
-      <link href="https://pytorch.org/blog/new-executive-director/" rel="alternate" type="text/html" title="PyTorch Foundation Welcomes New Executive Director" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/new-executive-director/" rel="alternate" type="text/html" title="PyTorch Foundation Welcomes New Executive Director" />
       <published>2024-06-11T00:00:00-07:00</published>
       <updated>2024-06-11T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/new-executive-director</id>
-      <content type="html" xml:base="https://pytorch.org/blog/new-executive-director/">&lt;p&gt;&lt;img src=&quot;/assets/images/matt-white.jpg&quot; alt=&quot;Matt White&quot; style=&quot;max-width:220px;float:right;margin-left: 20px;&quot; /&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/new-executive-director</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/new-executive-director/">&lt;p&gt;&lt;img src=&quot;/assets/images/matt-white.jpg&quot; alt=&quot;Matt White&quot; style=&quot;max-width:220px;float:right;margin-left: 20px;&quot; /&gt;
 The PyTorch Foundation is excited to welcome Matt White, our new executive director. The PyTorch Foundation formed in 2022 with the goal to drive adoption of AI tooling by fostering and sustaining an ecosystem of open source, vendor-neutral projects with PyTorch. Over the past 2 years, we’ve seen excellent growth across the project – with both contributor and member growth.&lt;/p&gt;
 
 &lt;p&gt;“I am honored to be a part of the PyTorch Foundation, working with such a passionate and skilled community,” said Matt White. “I am looking forward to working with our contributors and members to advance the PyTorch ecosystem through research, cutting edge technologies and open source best practices.”&lt;/p&gt;
@@ -685,11 +685,11 @@ The PyTorch Foundation is excited to welcome Matt White, our new executive direc
   
     <entry>
       <title type="html">INT4 Decoding GQA CUDA Optimizations for LLM Inference</title>
-      <link href="https://pytorch.org/blog/int4-decoding/" rel="alternate" type="text/html" title="INT4 Decoding GQA CUDA Optimizations for LLM Inference" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/int4-decoding/" rel="alternate" type="text/html" title="INT4 Decoding GQA CUDA Optimizations for LLM Inference" />
       <published>2024-06-06T00:00:00-07:00</published>
       <updated>2024-06-06T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/int4-decoding</id>
-      <content type="html" xml:base="https://pytorch.org/blog/int4-decoding/">&lt;h4 id=&quot;an-efficient-decoding-grouped-query-attention-with-low-precision-kv-cache&quot;&gt;An efficient decoding Grouped-Query Attention with low-precision KV cache&lt;/h4&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/int4-decoding</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/int4-decoding/">&lt;h4 id=&quot;an-efficient-decoding-grouped-query-attention-with-low-precision-kv-cache&quot;&gt;An efficient decoding Grouped-Query Attention with low-precision KV cache&lt;/h4&gt;
 
 &lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 
@@ -4100,11 +4100,11 @@ The PyTorch Foundation is excited to welcome Matt White, our new executive direc
   
     <entry>
       <title type="html">Ready, Set, Contribute: PyTorch Docathon Kickoff H1 2024</title>
-      <link href="https://pytorch.org/blog/docathon-kickoff-h1-2024/" rel="alternate" type="text/html" title="Ready, Set, Contribute: PyTorch Docathon Kickoff H1 2024" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/docathon-kickoff-h1-2024/" rel="alternate" type="text/html" title="Ready, Set, Contribute: PyTorch Docathon Kickoff H1 2024" />
       <published>2024-06-04T00:00:00-07:00</published>
       <updated>2024-06-04T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/docathon-kickoff-h1-2024</id>
-      <content type="html" xml:base="https://pytorch.org/blog/docathon-kickoff-h1-2024/">&lt;p&gt;The PyTorch Docathon is now live! This event is dedicated to enhancing the quality of the PyTorch documentation with the invaluable assistance of our community. Our hope with this Docathon is to simplify the process for new users to get started with PyTorch, guide them in effectively utilizing its features, and ultimately expedite the transition from research to production in machine learning.&lt;/p&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/docathon-kickoff-h1-2024</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/docathon-kickoff-h1-2024/">&lt;p&gt;The PyTorch Docathon is now live! This event is dedicated to enhancing the quality of the PyTorch documentation with the invaluable assistance of our community. Our hope with this Docathon is to simplify the process for new users to get started with PyTorch, guide them in effectively utilizing its features, and ultimately expedite the transition from research to production in machine learning.&lt;/p&gt;
 
 &lt;p style=&quot;text-align: center;&quot;&gt;&lt;a href=&quot;https://discord.com/events/878249534336167987/1245440397510180907&quot; target=&quot;_blank&quot;&gt;JOIN THE KICK-OFF EVENT&lt;/a&gt;&lt;br /&gt;
 on June 4th at 10 AM PT&lt;/p&gt;
@@ -4190,11 +4190,11 @@ on June 4th at 10 AM PT&lt;/p&gt;
   
     <entry>
       <title type="html">Maximizing Training Throughput Using PyTorch FSDP and Torch.compile</title>
-      <link href="https://pytorch.org/blog/maximizing-training-throughput/" rel="alternate" type="text/html" title="Maximizing Training Throughput Using PyTorch FSDP and Torch.compile" />
+      <link href="https://pytorch.org/pytorch.github.io/blog/maximizing-training-throughput/" rel="alternate" type="text/html" title="Maximizing Training Throughput Using PyTorch FSDP and Torch.compile" />
       <published>2024-05-21T00:00:00-07:00</published>
       <updated>2024-05-21T00:00:00-07:00</updated>
-      <id>https://pytorch.org/blog/maximizing-training-throughput</id>
-      <content type="html" xml:base="https://pytorch.org/blog/maximizing-training-throughput/">&lt;p&gt;&lt;a href=&quot;https://pytorch.org/blog/maximizing-training/&quot;&gt;Recently&lt;/a&gt;, we demonstrated how FSDP and selective activation checkpointing can be used to achieve &lt;strong&gt;57% MFU (Model Flops Utilization)&lt;/strong&gt; for training a 7B model on A100 GPUs. We also demonstrated how it can train a high quality model, which we open sourced as &lt;a href=&quot;https://huggingface.co/ibm/granite-7b-base&quot;&gt;Granite 7B base model&lt;/a&gt; on Hugging Face Hub under the Apache v2.0 license.&lt;/p&gt;
+      <id>https://pytorch.org/pytorch.github.io/blog/maximizing-training-throughput</id>
+      <content type="html" xml:base="https://pytorch.org/pytorch.github.io/blog/maximizing-training-throughput/">&lt;p&gt;&lt;a href=&quot;https://pytorch.org/blog/maximizing-training/&quot;&gt;Recently&lt;/a&gt;, we demonstrated how FSDP and selective activation checkpointing can be used to achieve &lt;strong&gt;57% MFU (Model Flops Utilization)&lt;/strong&gt; for training a 7B model on A100 GPUs. We also demonstrated how it can train a high quality model, which we open sourced as &lt;a href=&quot;https://huggingface.co/ibm/granite-7b-base&quot;&gt;Granite 7B base model&lt;/a&gt; on Hugging Face Hub under the Apache v2.0 license.&lt;/p&gt;
 
 &lt;p&gt;We continued our quest to improve  the utilization of GPUs by leveraging torch.compile. Using torch.compile and the selective activation checkpointing from our previous work, we achieve a &lt;strong&gt;MFU of 68%&lt;/strong&gt; for the 7B model on A100 GPUs! torch.compile improves training MFU between 10% and 23% for various model sizes.&lt;/p&gt;
 

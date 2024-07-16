@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" type="image/x-icon" href="pytorch.github.io//favicon.ico?">
+  <title>
+    
+      Accelerated CPU Inference with PyTorch Inductor using torch.compile | PyTorch
+    
+  </title>
+  <meta name="robots" content="index, follow" />
+
+<meta name="description" content="Story at a Glance
+
+" />
+
+  <meta property="og:image" content="https://pytorch.orgpytorch.github.io//assets/images/social-share.jpg" />
+  <meta name="twitter:image" content="https://pytorch.orgpytorch.github.io//assets/images/social-share.jpg" />
+
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Accelerated CPU Inference with PyTorch Inductor using torch.compile" />
+<meta property="og:description" content="Story at a Glance
+
+" />
+<meta property="og:site_name" content="PyTorch" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Accelerated CPU Inference with PyTorch Inductor using torch.compile" />
+<meta name="twitter:description" content="Story at a Glance
+
+" />
+
+  <link rel="stylesheet" href="pytorch.github.io//assets/main.css">
+  <script src="pytorch.github.io//assets/vendor/jquery.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/popper.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/bootstrap.min.js"></script>
+  <script src="pytorch.github.io//assets/vendor/anchor.min.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        inlineMath: [['$','$']]
+      }
+    });
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+  
+    <script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=UA-117752657-2"
+></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "UA-117752657-2");
+</script>
+
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '243028289693773');
+    fbq('track', 'PageView');
+</script>
+
+<noscript>
+  <img height="1" width="1"
+  src="https://www.facebook.com/tr?id=243028289693773&ev=PageView
+  &noscript=1"/>
+</noscript>
+
+    <!-- Twitter universal website tag code -->
+<img height="1" width="1" style="display:none;" alt="" src="https://analytics.twitter.com/i/adsct?p_id=Twitter&p_user_id=0&txn_id=o2gi1&events=%5B%5B%22pageview%22%2Cnull%5D%5D&tw_sale_amount=0&tw_order_quantity=0 (https://urldefense.proofpoint.com/v2/url?u=https-3A__analytics.twitter.com_i_adsct-3Fp-5Fid-3DTwitter-26p-5Fuser-5Fid-3D0-26txn-5Fid-3Do2gi1-26events-3D-255B-255B-2522pageview-2522-252Cnull-255D-255D-26tw-5Fsale-5Famount-3D0-26tw-5Forder-5Fquantity-3D0&d=DwMGaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=GMr8XYCDyeQQZuD3noL91A&m=dAJyokk16UvYy-vMrGn_JwYiGfp_eEgo25B9iGDCG-A&s=o6i4D0V0088WH2RnzIoqiF-vj45PL-2sTrsxQ0SNO3A&e=)" />
+<img height="1" width="1" style="display:none;" alt="" src="//t.co/i/adsct?p_id=Twitter&p_user_id=0&txn_id=o2gi1&events=%5B%5B%22pageview%22%2Cnull%5D%5D&tw_sale_amount=0&tw_order_quantity=0 (https://urldefense.proofpoint.com/v2/url?u=https-3A__linkprotect.cudasvc.com_url-3Fa-3Dhttp-253a-252f-252ft.co-252fi-252fadsct-253fp-5Fid-253dTwitter-2526p-5Fuser-5Fid-253d0-2526txn-5Fid-253do2gi1-2526events-253d-25255B-25255B-252522pageview-252522-25252Cnull-25255D-25255D-2526tw-5Fsale-5Famount-253d0-2526tw-5Forder-5Fquantity-253d0-26c-3DE-2C1-2CC33dLwIhtuEcl5FhdztSnUwsioeej5k-2DWy0RYREBAq51kGji32A2Cw94YU9vQBpY5tPN3AukEw3C-5F-2DlbtndnLoR7-5FA-5FLoH0Rr7zLtP1ykptN-26typo-3D1&d=DwMGaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=GMr8XYCDyeQQZuD3noL91A&m=dAJyokk16UvYy-vMrGn_JwYiGfp_eEgo25B9iGDCG-A&s=Abgc3XBkhESv8XBYtLchdDZyISGsK6v_BB6cLMJGyCw&e=)" />
+<!-- End Twitter universal website tag code -->
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <link href="pytorch.github.io//feed.xml" type="application/atom+xml" rel="alternate" title="Pythorch Blog Posts" />
+</head>
+
+
+<body class="blog">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <div class="main-background blog-background blog-detail-background"></div>
+    <div class="hello-bar">
+        <div class="container">
+          Join us in Silicon Valley September 18-19 at the 2024 PyTorch Conference. <a target="_blank" href="https://events.linuxfoundation.org/pytorch-conference/">Learn more</a>.
+        </div>
+      </div>
+      
+    <div class="container-fluid header-holder blog-detail-header">
+        <div class="container">
+            
+
+<div class="header-container">
+  <a class="header-logo" href="https://pytorch.orgpytorch.github.io/" aria-label="PyTorch"></a>
+
+  <div class="main-menu">
+  <ul>
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Learn
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//get-started">
+            <span class=dropdown-title>Get Started</span>
+            <p>Run PyTorch locally or get started quickly with one of the supported cloud platforms</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/">
+            <span class="dropdown-title">Tutorials</span>
+            <p>Whats new in PyTorch tutorials</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/beginner/basics/intro.html">
+            <span class="dropdown-title">Learn the Basics</span>
+            <p>Familiarize yourself with PyTorch concepts and modules</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/recipes/recipes_index.html">
+            <span class="dropdown-title">PyTorch Recipes</span>
+            <p>Bite-size, ready-to-deploy PyTorch code examples</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://pytorch.org/tutorials/beginner/introyt.html">
+            <span class="dropdown-title">Intro to PyTorch - YouTube Series</span>
+            <p>Master PyTorch basics with our engaging YouTube tutorial series</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Ecosystem 
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//ecosystem">
+            <span class="dropdown-title">Tools</span>
+            <p>Learn about the tools and frameworks in the PyTorch Ecosystem</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//#community-module">
+            <span class=dropdown-title>Community</span>
+            <p>Join the PyTorch developer community to contribute, learn, and get your questions answered.</p>
+          </a>
+          <a class="nav-dropdown-item" href="https://discuss.pytorch.org" target="_blank">
+            <span class=dropdown-title>Forums</span>
+            <p>A place to discuss PyTorch code, issues, install, research</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//resources">
+            <span class=dropdown-title>Developer Resources</span>
+            <p>Find resources and get questions answered</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//ecosystem/contributor-awards-2023">
+            <span class="dropdown-title">Contributor Awards - 2023</span>
+            <p>Award winners announced at this year's PyTorch Conference</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Edge 
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//edge">
+            <span class="dropdown-title">About PyTorch Edge</span>
+            <p>Build innovative and privacy-aware AI experiences for edge devices</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//executorch-overview">
+            <span class="dropdown-title">ExecuTorch</span>
+            <p>End-to-end solution for enabling on-device inference capabilities across mobile and edge devices</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="docsDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Docs
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="https://pytorch.org/docs">
+            <span class="dropdown-title">PyTorch</span>
+            <p>Explore the documentation for comprehensive guidance on how to use PyTorch.</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//pytorch-domains">
+            <span class="dropdown-title">PyTorch Domains</span>
+            <p> Read the PyTorch Domains documentation to learn more about domain-specific libraries.</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="dropdownMenuButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          Blog & News
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//blog">
+            <span class="dropdown-title">PyTorch Blog</span>
+            <p>Catch up on the latest technical news and happenings</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//community-blog">
+            <span class="dropdown-title">Community Blog</span>
+            <p>Stories from the PyTorch ecosystem</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//videos">
+            <span class="dropdown-title">Videos</span>
+            <p>Learn about the latest PyTorch tutorials, new, and more </p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//community-stories">
+            <span class="dropdown-title">Community Stories</span>
+            <p>Learn how our community solves real, everyday machine learning problems with PyTorch</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//events">
+            <span class=dropdown-title>Events</span>
+            <p>Find events, webinars, and podcasts</p>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
+        <a class="with-down-arrow">
+          About
+        </a>
+        <div class="resources-dropdown-menu">
+          <a class="nav-dropdown-item" href="pytorch.github.io//foundation">
+            <span class=dropdown-title>PyTorch Foundation</span>
+            <p>Learn more about the PyTorch Foundation.</p>
+          </a>
+          <a class="nav-dropdown-item" href="pytorch.github.io//governing-board">
+            <span class=dropdown-title>Governing Board</span>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu-item">
+      <a href="pytorch.github.io//join" data-cta="join">
+        Become a Member
+      </a>
+    </li>
+
+    <li class="main-menu-item" id="github-main-menu-link">
+      <a href="https://github.com/pytorch/pytorch" title="Go to PyTorch GitHub">
+        <div id="topnav-gh-icon"></div>
+      </a>
+    </li>
+
+    <li class="navSearchWrapper reactNavSearchWrapper" key="search">
+      <div class="search-border">
+        <div id="search-icon"></div>
+        <input
+          id="search-input"
+          type="text"
+          title="Search"
+        />
+        <div id="close-search">X</div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<script src="pytorch.github.io//assets/main-menu-dropdown.js"></script>
+
+
+  <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
+</div>
+
+        </div>
+    </div>
+
+    <div class="jumbotron jumbotron-fluid blog-detail-jumbotron">
+        <div class="container blog-detail-container">
+            <p class="featured-post">September 13, 2023</p>
+            <h1>
+                <a class="blog-title">Accelerated CPU Inference with PyTorch Inductor using torch.compile</a>
+            </h1>
+        </div>
+    </div>
+
+    <div class="main-content-wrapper blog-detail-wrapper">
+        <div class="main-content blog-detail-content">
+            <div class="container">
+                <img src="pytorch.github.io//assets/images/logo-icon.svg" class="img-fluid author-icon">
+                <article class="pytorch-article">
+                    <p class="author">
+                      by
+                      
+                        Intel
+                      
+                    </p>
+                    <h2 id="story-at-a-glance">Story at a Glance</h2>
+
+<ul>
+  <li><em>Although the PyTorch* Inductor C++/OpenMP* backend has enabled users to take advantage of modern CPU architectures and parallel processing, it has lacked optimizations, resulting in the backend performing worse than eager mode in terms of end-to-end performance.</em></li>
+  <li><em>Intel optimized the Inductor backend using a hybrid strategy that classified operations into two categories: Conv/GEMM and non-Conv/GEMM element-wise and reduction ops.</em></li>
+  <li><em>For popular deep learning models, this hybrid strategy demonstrates promising performance improvements compared to eager mode and improves the C++/OpenMP backend’s efficiency and reliability for PyTorch models.</em></li>
+</ul>
+
+<hr />
+
+<h2 id="inductor-backend-challenges">Inductor Backend Challenges</h2>
+
+<p>The PyTorch Inductor C++/OpenMP backend enables users to take advantage of modern CPU architectures and parallel processing to accelerate computations.</p>
+
+<p>However, during the early stages of its development, the backend lacked some optimizations, which prevented it from fully utilizing the CPU computation capabilities. As a result, for most models the C++/OpenMP backend performed worse than eager mode in terms of end-to-end performance, with 45% of TorchBench, 100% of Hugging Face, and 75% of TIMM models performing worse than eager mode.</p>
+
+<p>In this post, we highlight Intel’s optimizations to the Inductor CPU backend, including the technologies and results.</p>
+
+<p>We optimized the backend by using a hybrid strategy that classified operations into two categories: Conv/GEMM and non-Conv/GEMM element-wise and reduction ops. Post-op fusion and weight prepacking using the oneDNN performance library were utilized to optimize the former, while explicit vectorization in C++ codegen was used to optimize the latter.</p>
+
+<p>This hybrid strategy demonstrated promising performance improvements compared to eager mode, particularly on popular deep learning models such as Inductor Hugging Face, Inductor TorchBench and Inductor TIMM. Overall, Intel’s optimizations improve the C++/OpenMP backend’s efficiency and reliability for PyTorch models.</p>
+
+<p><img src="/assets/images/accelerated-cpu-inference/f1-pytorch-inference-speedup-ratio-trend-multi.png.rendition.intel.web.1648.927.png" alt="Figure 1. Performance Speedup Ratio Trend" style="width:100%;" /></p>
+
+<p><small style="line-height: 1.1"><em><strong>Figure 1</strong>: Performance Speedup Ratio Trend</em></small></p>
+
+<h3 id="performance-status-of-intel-hybrid-optimizations">Performance Status of Intel Hybrid Optimizations</h3>
+
+<p>Compared to eager mode with the hybrid optimizations, the C++/OpenMP backend shows promising performance improvements. We measured the performance of the three Inductor benchmark suites—TorchBench, Hugging Face, and TIMM—and the results are as follows. (<em>Note: we publish our performance data twice per week on <a href="http://github.com/pytorch/pytorch/issues/93531">GitHub</a>.</em>)</p>
+
+<p>Overall, these optimizations help to ensure that the C++/OpenMP backend provides efficient and reliable support for PyTorch models.</p>
+
+<h3 id="passrate">Passrate</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------+------------+-------------+-------------+
+| Compiler | torchbench | huggingface | timm_models |
++----------+------------+-------------+-------------+
+| inductor | 93%, 56/60 | 96%, 44/46  | 100%, 61/61 |
++----------+------------+-------------+-------------+
+</code></pre></div></div>
+
+<h3 id="geometric-mean-speedup-single-socket-multi-threads">Geometric mean speedup (Single-Socket Multi-threads)</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------+------------+-------------+-------------+
+| Compiler | torchbench | huggingface | timm_models |
++----------+------------+-------------+-------------+
+| inductor |   1.39x    |    1.20x    |    1.73x    |
++----------+------------+-------------+-------------+
+</code></pre></div></div>
+
+<h3 id="individual-model-performance">Individual Model Performance</h3>
+
+<p><img src="/assets/images/accelerated-cpu-inference/f2-torchbench-fp32-performance-multithread.png.rendition.intel.web.1648.927.png" alt="Figure 2. TorchBench FP32 Performance (Single-Socket Multi-threads)" style="width:100%;" /></p>
+
+<p><small style="line-height: 1.1"><em><strong>Figure 2</strong>: TorchBench FP32 Performance (Single-Socket Multi-threads)</em></small></p>
+
+<p><img src="/assets/images/accelerated-cpu-inference/f3-huggingface-fp32-performance-multithread.png.rendition.intel.web.1648.927.png" alt="Figure 3. Hugging Face FP32 Performance (Single-Socket Multi-thread)" style="width:100%;margin-top: 3em;" /></p>
+
+<p><small style="line-height: 1.1"><em><strong>Figure 3</strong>: Hugging Face FP32 Performance (Single-Socket Multi-thread)</em></small></p>
+
+<p><img src="/assets/images/accelerated-cpu-inference/f4-timm-fp32-performance-multithread.png.rendition.intel.web.1648.927.png" alt="Figure 4. TIMM FP32 Performance (Single-Socket Multi-threads)" style="width:100%;margin-top: 3em;" /></p>
+
+<p><small style="line-height: 1.1"><em><strong>Figure 4</strong>: TIMM FP32 Performance (Single-Socket Multi-threads)</em></small></p>
+
+<h3 id="geometric-mean-speedup-single-core-single-thread">Geometric mean speedup (Single-core Single-thread)</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------+------------+-------------+-------------+
+| Compiler | torchbench | huggingface | timm_models |
++----------+------------+-------------+-------------+
+| inductor |    1.29x   |    1.15x    |    1.37x    |
++----------+------------+-------------+-------------+
+</code></pre></div></div>
+
+<p><img src="/assets/images/accelerated-cpu-inference/f5-torchbench-fp32-performance-single-thread.png.rendition.intel.web.1648.927.png" alt="Figure 5. TorchBench FP32 Performance (Single-Socket Single-thread)" style="width:100%;" /></p>
+
+<p><small style="line-height: 1.1"><em><strong>Figure 5</strong>: TorchBench FP32 Performance (Single-Socket Single-thread)</em></small></p>
+
+<p><img src="/assets/images/accelerated-cpu-inference/f6-huggingface-fp32-performance-single-thread.png.rendition.intel.web.1648.927.png" alt="Figure 6. Hugging Face FP32 Performance (Single-Socket Single Thread)" style="width:100%;margin-top: 3em;" /></p>
+
+<p><small style="line-height: 1.1"><em><strong>Figure 6</strong>: Hugging Face FP32 Performance (Single-Socket Single Thread)</em></small></p>
+
+<p><img src="/assets/images/accelerated-cpu-inference/f7-timm-fp32-performance-single-thread.png.rendition.intel.web.1648.927.png" alt="Figure 7. TIMM FP32 Performance (Single-Socket Single-thread)" style="width:100%;margin-top: 3em;" /></p>
+
+<p><small style="line-height: 1.1"><em><strong>Figure 7</strong>: TIMM FP32 Performance (Single-Socket Single-thread)</em></small></p>
+
+<h2 id="technical-deep-dive">Technical Deep Dive</h2>
+
+<p>Now, let’s take a closer look at the two primary optimizations used in the Inductor C++/OpenMP backend:</p>
+
+<ol>
+  <li>weight prepacking and post-operation fusion via oneDNN library</li>
+  <li>explicit vectorization in Inductor C++ codegen</li>
+</ol>
+
+<h3 id="weight-prepackaging--post-op-fusion-via-onednn">Weight Prepackaging &amp; Post-op Fusion via oneDNN</h3>
+
+<p>Shorthand for Intel® oneAPI Deep Neural Network Library, oneDNN library provides a range of post-op fusions (i.e., fuse convolution and matmal with its consecutive operation) that can benefit popular models. The <a href="https://github.com/intel/intel-extension-for-pytorch">Intel® Extension for PyTorch</a> has implemented most of these fusions and has achieved significant performance improvements. As a result, we have upstreamed all of these fusions that have been applied in Intel’s PyTorch extension to Inductor, enabling a wider range of models to benefit from these optimizations. We have defined these fusions as operators under the mkldnn namespace. This allows the Python module to invoke these mkldnn operations directly.</p>
+
+<p>Currently, the defined fused operations are as follows. You can find these defined fused operations at <a href="https://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/aten/src/ATen/native/mkldnn/RegisterMkldnnOpContextClass.cpp#L35-#L48">RegisterMkldnnOpContextClass.cpp</a>.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">_linear_pointwise</code>: Fuses Linear and its post-unary element-wise operations</li>
+  <li><code class="language-plaintext highlighter-rouge">_linear_pointwise.binary</code>: Fuses Linear and its post-binary element-wise operations</li>
+  <li><code class="language-plaintext highlighter-rouge">_convolution_pointwise</code>: Fuses Convolution and its post-unary element-wise operations</li>
+  <li><code class="language-plaintext highlighter-rouge">_convolution_pointwise.binary</code>: Fuses Convolution and its post-binary element-wise operations</li>
+</ul>
+
+<p>The detailed fusion patterns are defined in the <a href="https://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/mkldnn.py#L774-#L818">mkldnn.py</a> file: <code class="language-plaintext highlighter-rouge">convolution/linear + sigmoid/hardsigmoid/tanh/hardtanh/hardswish/leaky_relu/gelu/relu/relu6/siluconvolution/linear + add/add_/iadd/sub/sub_</code></p>
+
+<p>On the Inductor side, we apply these fusions on the FX graph that has been lowered. We have defined <a href="https://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/mkldnn.py#L491">mkldnn_fuse_fx</a> as the entry point to apply all the fusions. The code snippet for this is as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def mkldnn_fuse_fx(gm: torch.fx.GraphModule, example_inputs):
+    ...
+    gm = fuse_unary(gm)
+    gm = fuse_binary(gm)
+    ...
+    if config.cpp.weight_prepack:
+        gm = pack_module(gm)
+    return gm
+</code></pre></div></div>
+
+<p>In the <code class="language-plaintext highlighter-rouge">mkldnn_fuse_fx</code> function, we apply fusion on the FX graph that hasn’t been lowered yet. To fuse convolution/linear and its consecutive elementwise operations, we invoke <code class="language-plaintext highlighter-rouge">fuse_unary</code> and <code class="language-plaintext highlighter-rouge">fuse_binary</code> as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   gm = fuse_unary(gm)
+   gm = fuse_binary(gm)
+</code></pre></div></div>
+
+<p>In addition to the post-op fusion, we apply weight prepacking to improve the Conv/GEMM performance further:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   gm = pack_module(gm)
+</code></pre></div></div>
+
+<p>Weight prepacking involves rearranging the weight tensor in a blocked layout, which:</p>
+
+<ul>
+  <li>can improve vectorization and cache reuse compared to plain formats like NCHW or NHWC and;</li>
+  <li>can help avoid weight reordering at runtime, which can reduce overhead and improve performance and;</li>
+  <li>increases memory usage as the tradeoff.</li>
+</ul>
+
+<p>For these reasons, we provide <code class="language-plaintext highlighter-rouge">config.cpp.weight_prepack</code> flag in Inductor to provide users with more control over this optimization, allowing them to enable it based on their specific needs.</p>
+
+<h3 id="explicit-vectorization-in-inductor-c-codegen">Explicit Vectorization in Inductor C++ Codegen</h3>
+
+<p>Vectorization is a key optimization technique that can significantly improve the performance of numerical computations. By utilizing SIMD (Single Instruction, Multiple Data) instructions, vectorization enables multiple computations to be performed simultaneously on a single processor core, which can lead to significant performance improvements.</p>
+
+<p>In the Inductor C++/OpenMP backend, we use <a href="https://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/codecache.py#L372">Intel® AVX2</a> and <a href="https://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/codecache.py#L359">Intel® AVX-512</a> ISA (Instruction Set Architecture) options for vectorization by leveraging the aten vectorization library to facilitate the implementation. Aten vectorization supports multiple platforms, including x86 and Arm, as well as multiple data types. It can be extended to support other ISAs easily by adding more <a href="https://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/codecache.py#L275">VecISA</a> sub-classes. This allows Inductor to easily support other platforms and data types in the future.</p>
+
+<p>Due to differences in platforms, the C++/OpenMP backend of Inductor starts by detecting the CPU features to determine the vectorization bit width at the beginning of code generation. By default, if the machine supports both AVX-512 and AVX2, the backend will choose 512-bit vectorization.</p>
+
+<p>If the hardware supports vectorization, the C++/OpenMP backend first detects if the loop body can be vectorized or not. There are primarily three scenarios that we are not able to generate kernel with vectorization:</p>
+
+<ol>
+  <li>Loop body lacks vector intrinsics support, e.g., <code class="language-plaintext highlighter-rouge">rand</code> and <code class="language-plaintext highlighter-rouge">atomic_add</code>.</li>
+  <li>Loop body lacks efficient vector intrinsics support, e.g., non-contiguous <code class="language-plaintext highlighter-rouge">load/store</code>.</li>
+  <li>Data types with vectorization not yet supported but work in progress, e.g., integer, double, half, and bfloat16.</li>
+</ol>
+
+<p>To address this issue, the C++/OpenMP backend uses <a href="https://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/codegen/cpp.py#L1396">CppVecKernelChecker</a> to detect whether all operations in a particular loop body can be vectorized or not. In general, we classified the operations into two categories by identifying if they depend on the context.</p>
+
+<p>For most elementwise operations such as <code class="language-plaintext highlighter-rouge">add</code>, <code class="language-plaintext highlighter-rouge">sub</code>, <code class="language-plaintext highlighter-rouge">relu</code>, vectorization is straightforward, and their execution does not depend on context.</p>
+
+<p>However, for certain other operations, their semantics are more complex and their execution depends on context through static analysis.</p>
+
+<p>For example, let’s consider the where operation that takes in mask, <code class="language-plaintext highlighter-rouge">true_value</code>, and <code class="language-plaintext highlighter-rouge">false_value</code> while the mask value is loaded from a <code class="language-plaintext highlighter-rouge">uint8</code> tensor. The fx graph could be as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>graph():
+    %ops : [#users=9] = placeholder[target=ops]
+    %get_index : [#users=1] = call_module[target=get_index](args = (index0,), kwargs = {})
+    %load : [#users=1] = call_method[target=load](args = (%ops, arg1_1, %get_index), kwargs = {})
+    %to_dtype : [#users=1] = call_method[target=to_dtype](args = (%ops, %load, torch.bool), kwargs = {})
+    ...
+    %where : [#users=1] = call_method[target=where](args = (%ops, %to_dtype, %to_dtype_2, %to_dtype_3), kwargs = {})
+</code></pre></div></div>
+
+<p>Regarding <code class="language-plaintext highlighter-rouge">uint8</code>, it is a general data type and could be used for computation but is not limited to being used as Boolean for mask. Hence, we need to analyze its context statically. In particular, the <a href="https://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/codegen/cpp.py#L1396">CppVecKernelChecker</a> will check whether a uint8 tensor is only used by <code class="language-plaintext highlighter-rouge">to_dtype</code> and <code class="language-plaintext highlighter-rouge">to_dtype</code> is only used by where. If yes, it could be vectorized. Otherwise, it will fall back to the scalar version. The generated code could be as follows:</p>
+
+<p>Scalar Version</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auto tmp0 = in_ptr0[i1 + (17*i0)];
+auto tmp3 = in_ptr1[i1 + (17*i0)];
+auto tmp1 = static_cast&lt;bool&gt;(tmp0);
+auto tmp2 = static_cast&lt;float&gt;(-33.0);
+auto tmp4 = tmp1 ? tmp2 : tmp3;
+tmp5 = std::max(tmp5, tmp4);
+</code></pre></div></div>
+
+<p>Vectorization Version</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>float g_tmp_buffer_in_ptr0[16] = {0};
+// Convert the flag to float for vectorization. 
+flag_to_float(in_ptr0 + (16*i1) + (17*i0), g_tmp_buffer_in_ptr0, 16);
+auto tmp0 = at::vec::Vectorized&lt;float&gt;::loadu(g_tmp_buffer_in_ptr0);
+auto tmp3 = at::vec::Vectorized&lt;float&gt;::loadu(in_ptr1 + (16*i1) + (17*i0));
+auto tmp1 = (tmp0);
+auto tmp2 = at::vec::Vectorized&lt;float&gt;(static_cast&lt;float&gt;(-33.0));
+auto tmp4 = decltype(tmp2)::blendv(tmp3, tmp2, tmp1);
+</code></pre></div></div>
+
+<p>In addition to context analysis, the C++/OpenMP backend also incorporates several other vectorization-related optimizations. These include:</p>
+
+<ul>
+  <li>Tiled kernel implementation for supporting transpose load - <a href="http://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/codegen/cpp.py#L1211">cpp.py</a></li>
+  <li>Data type demotion based on value range - <a href="http://github.com/pytorch/pytorch/blob/fe05266fda4f908130dea7cbac37e9264c0429a2/torch/_inductor/codegen/cpp.py#L1647-#L1672">cpp.py</a></li>
+  <li>Replacement of <a href="http://github.com/shibatch/sleef/tree/e0a003ee838b75d11763aa9c3ef17bf71a725bff">sleef</a> implementation with oneDNN/oneMKL implementation for optimizing aten vectorization - <a href="http://github.com/pytorch/pytorch/pull/94577">#94577</a>, <a href="http://github.com/pytorch/pytorch/pull/92289">#92289</a>, <a href="http://github.com/pytorch/pytorch/pull/91613">#91613</a></li>
+</ul>
+
+<p>In summary, we examined vectorization optimization in Inductor C++ backend for FP32 training and inference of 150 benchmark models with 90% of inference kernels and 71% of training kernels being vectorized.</p>
+
+<p>In terms of inference, a total of 28,185 CPP kernels were generated, with 25,579 (90%) of them being vectorized, while the remaining 10% were scalar. As for training, 103,084 kernels were generated, with 73,909 (71%) being vectorized and 29% not vectorized.</p>
+
+<p>The results indicate that <strong>the vectorization of inference kernels is quite impressive</strong> (there is still some work to be done in training kernels since we just started to work on the training). The remaining non-vectorized kernels are analyzed in different categories, highlighting the next steps to improve vectorization coverage: index-related operations, int64 support, vertical reduction, vectorization with fallback, and more.</p>
+
+<p>In addition, we also optimized the C++/OpenMP backend with other optimizations like buffer-reuse and CppWrapper.</p>
+
+<h4 id="future-work">Future Work</h4>
+
+<p>The next step, we will continue optimizing the C++/OpenMP backend and extend it to support more data types as the next step. This includes:</p>
+
+<ol>
+  <li>Improve vectorization coverage</li>
+  <li>Support and optimize low precision kernel including BF16, FP16, Quantization</li>
+  <li>Training optimization</li>
+  <li>Loop tiling</li>
+  <li>Autotune</li>
+  <li>Further fusion optimization of Conv/GEMM kernels.</li>
+  <li>Explore alternative codegen paths: clang/llvm/triton</li>
+</ol>
+
+<h2 id="summary">Summary</h2>
+
+<p>Inductor C++/OpenMP backend is a flexible and efficient backend for the CPU. This blog describes the optimizations used in the C++/OpenMP backend of Inductor for inference and training of three benchmark suites – TorchBench, Hugging</p>
+
+<p>Face and TIMM. The primary optimizations include weight prepacking and post-operation fusion via the oneDNN library, as well as explicit vectorization in Inductor C++ codegen using AVX2 and AVX-512 instructions.</p>
+
+<p>The results show that 90% of inference kernels and 71% of training kernels are vectorized, indicating impressive vectorization for inference and room for improvement in training. In addition, we also applied other optimizations like buffer-reuse and CppWrapper. And we will continuously focus on the future work mentioned above to further improve the performance.</p>
+
+<h3 id="acknowledgements">Acknowledgements</h3>
+
+<p>The results presented in this blog post are the culmination of a collaborative effort between the Intel PyTorch team and Meta. We would like to express our sincere gratitude to <a href="http://dev-discuss.pytorch.org/u/jansel">@jansel</a>, <a href="http://dev-discuss.pytorch.org/u/desertfire">@desertfire</a>, and <a href="http://dev-discuss.pytorch.org/u/chillee">@Chillee</a> for their invaluable contributions and unwavering support throughout the development process. Their expertise and dedication have been instrumental in achieving the optimizations and performance improvements discussed here.</p>
+
+<h3 id="configuration-details">Configuration Details</h3>
+
+<h4 id="hardware-details">Hardware Details</h4>
+
+<table>
+  <tr>
+   <td>
+<strong>Item </strong>
+   </td>
+   <td>
+<strong>Value </strong>
+   </td>
+  </tr>
+  <tr>
+   <td>
+Manufacturer 
+   </td>
+   <td>
+Amazon EC2 
+   </td>
+  </tr>
+  <tr>
+   <td>
+Product Name 
+   </td>
+   <td>
+c6i.16xlarge 
+   </td>
+  </tr>
+  <tr>
+   <td>
+CPU Model 
+   </td>
+   <td>
+Intel(R) Xeon(R) Platinum 8375C CPU @ 2.90GHz 
+   </td>
+  </tr>
+  <tr>
+   <td>
+Installed Memory 
+   </td>
+   <td>
+128GB (1x128GB DDR4 3200 MT/s [Unknown]) 
+   </td>
+  </tr>
+  <tr>
+   <td>
+OS 
+   </td>
+   <td>
+Ubuntu 22.04.2 LTS 
+   </td>
+  </tr>
+  <tr>
+   <td>
+Kernel 
+   </td>
+   <td>
+5.19.0-1022-aws 
+   </td>
+  </tr>
+  <tr>
+   <td>
+Microcode 
+   </td>
+   <td>
+0xd000389 
+   </td>
+  </tr>
+  <tr>
+   <td>
+GCC 
+   </td>
+   <td>
+gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0 
+   </td>
+  </tr>
+  <tr>
+   <td>
+GLIBC 
+   </td>
+   <td>
+ldd (Ubuntu GLIBC 2.35-0ubuntu3.1) 2.35 
+   </td>
+  </tr>
+  <tr>
+   <td>
+Binutils 
+   </td>
+   <td>
+GNU ld (GNU Binutils for Ubuntu) 2.38 
+   </td>
+  </tr>
+  <tr>
+   <td>
+Python 
+   </td>
+   <td>
+Python 3.10.6 
+   </td>
+  </tr>
+  <tr>
+   <td>
+OpenSSL 
+   </td>
+   <td>
+OpenSSL 3.0.2 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022) 
+   </td>
+  </tr>
+</table>
+
+<h4 id="software-details">Software Details</h4>
+
+<table>
+  <tr>
+   <td>
+<strong>SW</strong>
+   </td>
+   <td>
+<strong>Nightly commit</strong>
+   </td>
+   <td>
+<strong>Main commit</strong>
+   </td>
+  </tr>
+  <tr>
+   <td>
+Pytorch
+   </td>
+   <td>
+a977a12
+   </td>
+   <td>
+0b1b063
+   </td>
+  </tr>
+  <tr>
+   <td>
+Torchbench
+   </td>
+   <td>
+/
+   </td>
+   <td>
+a0848e19
+   </td>
+  </tr>
+  <tr>
+   <td>
+torchaudio
+   </td>
+   <td>
+0a652f5
+   </td>
+   <td>
+d5b2996
+   </td>
+  </tr>
+  <tr>
+   <td>
+torchtext
+   </td>
+   <td>
+c4ad5dd
+   </td>
+   <td>
+79100a6
+   </td>
+  </tr>
+  <tr>
+   <td>
+torchvision
+   </td>
+   <td>
+f2009ab
+   </td>
+   <td>
+b78d98b
+   </td>
+  </tr>
+  <tr>
+   <td>
+torchdata
+   </td>
+   <td>
+5cb3e6d
+   </td>
+   <td>
+f2bfd3d
+   </td>
+  </tr>
+  <tr>
+   <td>
+dynamo_benchmarks
+   </td>
+   <td>
+fea73cb
+   </td>
+   <td>
+/
+   </td>
+  </tr>
+</table>
+
+<h4 id="configuration">Configuration</h4>
+
+<ul>
+  <li>Intel OpenMP</li>
+  <li>Jemalloc - oversize_threshold:1,background_thread:true,metadata_thp:auto,dirty_decay_ms:-1,muzzy_decay_ms:-1</li>
+  <li><strong>Single-Socket Multi-threads:</strong> #of Instances: 1; Cores/Instance: 32</li>
+  <li><strong>Single-Core Single-thread:</strong> #of Instances: 1; Cores/Instance: 1</li>
+</ul>
+
+                </article>
+            </div>
+        </div>
+    </div>
+
+<!--    
+
+
+ -->
+    <div class="container-fluid docs-tutorials-resources">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <h2>Docs</h2>
+        <p>Access comprehensive developer documentation for PyTorch</p>
+        <a class="with-right-arrow" href="pytorch.github.io//docs">View Docs</a>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <h2>Tutorials</h2>
+        <p>Get in-depth tutorials for beginners and advanced developers</p>
+        <a class="with-right-arrow" href="https://pytorch.org/tutorials">View Tutorials</a>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <h2>Resources</h2>
+        <p>Find development resources and get your questions answered</p>
+        <a class="with-right-arrow" href="pytorch.github.io//resources">View Resources</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-container">
+    <div class="lf-grid">
+      <div class="footer-logo-wrapper">
+        <a href="https://pytorch.orgpytorch.github.io/" class="footer-logo">
+          <img src="/assets/images/logo-icon.svg" alt="PyTorch logo" width="40">
+        </a>
+      </div>
+
+      <ul class="social-links">
+        <li><a href="https://www.facebook.com/pytorch" target="_blank" title="PyTorch on Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="-0.51 -0.26 26.45 26.45" aria-label="Facebook"><path fill="currentColor" d="M25.497 13.075c0-2.45-.698-4.848-2.011-6.911a12.765 12.765 0 0 0-5.398-4.73A12.671 12.671 0 0 0 11.008.38a12.705 12.705 0 0 0-6.529 2.95A12.827 12.827 0 0 0 .563 9.358a12.896 12.896 0 0 0-.07 7.201 12.831 12.831 0 0 0 3.801 6.103 12.709 12.709 0 0 0 6.471 3.078v-8.957H7.53v-3.708h3.235v-2.824c0-3.213 1.903-4.988 4.813-4.988.956.014 1.909.097 2.852.25V8.67h-1.607a1.83 1.83 0 0 0-1.518.497 1.854 1.854 0 0 0-.561 1.505v2.404h3.535l-.563 3.708h-2.97v8.957a12.725 12.725 0 0 0 7.697-4.337 12.87 12.87 0 0 0 3.054-8.328z"/></svg>	
+        </a></li>
+        <li><a href="https://twitter.com/pytorch" target="_blank" title="PyTorch on X">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 300 300" aria-label="X"><path fill="currentColor" d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59h89.34M36.01 19.54H76.66l187.13 262.13h-40.66"/></svg>
+        </a></li>
+        <li><a href="https://www.youtube.com/pytorch" target="_blank" title="PyTorch on YouTube">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="0.21 0.27 34.45 25.07" aria-label="YouTube"><path fill="currentColor" d="M33.729 6.084s-.327-2.33-1.317-3.356a4.691 4.691 0 0 0-3.32-1.432c-4.634-.34-11.589-.34-11.589-.34h-.014s-6.954 0-11.59.342a4.692 4.692 0 0 0-3.32 1.432c-.993 1.025-1.315 3.354-1.315 3.354a52.189 52.189 0 0 0-.331 5.473v2.566c.014 1.829.125 3.656.331 5.472 0 0 .322 2.33 1.316 3.36 1.26 1.345 2.916 1.3 3.653 1.445 2.65.26 11.263.34 11.263.34s6.96-.01 11.597-.353a4.691 4.691 0 0 0 3.32-1.432c.993-1.026 1.316-3.356 1.316-3.356.206-1.817.316-3.644.33-5.473v-2.57a52.26 52.26 0 0 0-.33-5.472zM14.076 17.232V7.729l8.951 4.768-8.95 4.735z"/></svg>	
+        </a></li>
+        <li><a href="https://www.linkedin.com/company/pytorch" target="_blank" title="PyTorch on LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewbox="-10.23 -10.23 531.96 531.96" aria-label="LinkedIn"><rect width="512" height="512" rx="0" fill="currentColor"/><circle fill="#000" cx="142" cy="138" r="37"/><path stroke="#000" stroke-width="66" d="M244 194v198M142 194v198"/><path fill="#000" d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+        </a></li>
+        <li><a href="https://social.lfx.dev/@pytorch" rel="me" target="_blank" title="PyTorch on Mastodon">
+          <svg fill="currentColor" aria-label="Mastodon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"><path d="M21.327 8.566c0-4.339-2.843-5.61-2.843-5.61-1.433-.658-3.894-.935-6.451-.956h-.063c-2.557.021-5.016.298-6.45.956 0 0-2.843 1.272-2.843 5.61 0 .993-.019 2.181.012 3.441.103 4.243.778 8.425 4.701 9.463 1.809.479 3.362.579 4.612.51 2.268-.126 3.541-.809 3.541-.809l-.075-1.646s-1.621.511-3.441.449c-1.804-.062-3.707-.194-3.999-2.409a4.523 4.523 0 0 1-.04-.621s1.77.433 4.014.536c1.372.063 2.658-.08 3.965-.236 2.506-.299 4.688-1.843 4.962-3.254.434-2.223.398-5.424.398-5.424zm-3.353 5.59h-2.081V9.057c0-1.075-.452-1.62-1.357-1.62-1 0-1.501.647-1.501 1.927v2.791h-2.069V9.364c0-1.28-.501-1.927-1.502-1.927-.905 0-1.357.546-1.357 1.62v5.099H6.026V8.903c0-1.074.273-1.927.823-2.558.566-.631 1.307-.955 2.228-.955 1.065 0 1.872.409 2.405 1.228l.518.869.519-.869c.533-.819 1.34-1.228 2.405-1.228.92 0 1.662.324 2.228.955.549.631.822 1.484.822 2.558v5.253z"/></svg>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="privacy-policy">
+      <div class="copyright">
+        <p>© Copyright The Linux Foundation. The PyTorch Foundation is a project of The Linux Foundation. 
+          For web site terms of use, trademark policy and other policies applicable to The PyTorch Foundation please see 
+          <a href="https://www.linuxfoundation.org/legal/policies/">Linux Foundation Policies</a>. The PyTorch Foundation supports the PyTorch open source 
+          project, which has been established as PyTorch Project a Series of LF Projects, LLC. For policies applicable to the PyTorch Project a Series of LF Projects, LLC, 
+          please see <a href="https://www.lfprojects.org/policies/">LF Projects, LLC Policies</a>. <a href="https://www.linuxfoundation.org/privacy">Privacy Policy</a> and <a href="https://www.linuxfoundation.org/terms">Terms of Use</a>.</p>
+      </div>
+    </div>
+  </div>
+  <img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0"/>
+
+</footer>
+
+<div class="mobile-main-menu">
+  <div class="container-fluid">
+    <div class="container">
+      <div class="mobile-main-menu-header-container">
+        <a class="header-logo" href="https://pytorch.orgpytorch.github.io/" aria-label="PyTorch"></a>
+        <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-main-menu-links-container">
+
+    <div class="main-menu">
+      <ul>
+        <li class="navSearchWrapper reactNavSearchWrapper tabletSearchWrapper" key="search">
+          <div class="mobile-search-border">
+            <input
+              id="mobile-search-input"
+              type="text"
+              title="Search"
+            />
+            <div id="mobile-search-icon"></div>
+          </div>
+        </li>
+
+        <li class="resources-mobile-menu-title">
+          <a>Learn</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//get-started">Get Started</a> 
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials">Tutorials</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/beginner/basics/intro.html">Learn the Basics</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/recipes/recipes_index.html">PyTorch Recipes</a>
+          </li>
+          <li>
+            <a href="https://pytorch.org/tutorials/beginner/introyt.html">Introduction to PyTorch - YouTube Series</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Ecosystem</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//ecosystem">Tools</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//#community-module">Community</a>
+          </li>
+          <li>
+            <a href="https://discuss.pytorch.org">Forums</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//resources">Developer Resources</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//ecosystem/contributor-awards-2023">Contributor Awards - 2023</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Edge</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//edge">About PyTorch Edge</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//executorch-overview">ExecuTorch</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>Docs</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="https://pytorch.org/docs">PyTorch</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//pytorch-domains">PyTorch Domains</a>
+          </li>
+        </ul>
+
+        <li class="resources-mobile-menu-title">
+          <a>Blog & News</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//blog">PyTorch Blog</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//community-blog">Community Blog</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//videos">Videos</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//community-stories">Community Stories</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//events">Events</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a>About</a>
+        </li>
+        <ul class="resources-mobile-menu-items">
+          <li>
+            <a href="pytorch.github.io//foundation">PyTorch Foundation</a>
+          </li>
+          <li>
+            <a href="pytorch.github.io//governing-board">Governing Board</a>
+          </li>
+        </ul>
+        <li class="resources-mobile-menu-title">
+          <a href="pytorch.github.io//join">Become a Member</a>
+        </li>
+        <li class="resources-mobile-menu-title">
+          <a href="https://github.com/pytorch/pytorch" title="Go to PyTorch GitHub"><div id="topnav-gh-icon"></div></a>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<script src="pytorch.github.io//assets/mobile-menu.js"></script>
+<script src="pytorch.github.io//assets/scroll-to-anchor.js"></script>
+<script src="pytorch.github.io//assets/external-links-new-tab.js"></script>
+
+  <script src="pytorch.github.io//assets/search-bar.js"></script>
+
+<script src="pytorch.github.io//assets/cookie-banner.js"></script>
+
+<script type="text/javascript">
+  mobileMenu.bind();
+  anchors.add('.pytorch-article h2, .pytorch-article h3, .pytorch-article h4, .pytorch-article h5');
+
+  // Add class to links that have code blocks, since we cannot create links in code blocks
+  $("a code.highlighter-rouge").each(function(e) {
+    $(this).closest("a").addClass("has-code");
+  });
+
+  scrollToAnchor.bind();
+
+  var hasStaticHeader = $(".blog-header, .blog-detail-header, .resources-header, .get-started-header, .features-header, .ecosystem-header, .hub-header, .mobile-header, .announcement-header, .comm-stories-header").length > 0;
+
+  if (!hasStaticHeader) {
+    $(window).on("scroll", function() {
+      var top = $(this).scrollTop();
+      var fullPosition = $(".main-background").height() - $(".header-holder").height();
+
+      if (top <= 40) {
+        $(".header-holder").css({"backgroundColor": "rgba(0, 0, 0, 0.165)"});
+      } else if (top >= fullPosition) {
+        $(".header-holder").css({"backgroundColor": "#000000"});
+      } else {
+        var bgColor = "rgba(0, 0, 0, " + top / fullPosition + ")";
+        $(".header-holder").css({"backgroundColor": bgColor});
+      }
+    });
+  }
+</script>
+
+
+  <script src="pytorch.github.io//assets/track-events.js"></script>
+  <script>trackEvents.bind();</script>
+
+
+
+<div class="cookie-banner-wrapper">
+  <div class="container">
+    <p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
+    <img class="close-button" src="pytorch.github.io//assets/images/pytorch-x.svg">
+  </div>
+</div>
+
+
+</body>
+
+</html>
